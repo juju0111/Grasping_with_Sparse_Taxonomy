@@ -1,0 +1,595 @@
+<mujoco model="allegro_right">
+  <compiler angle="radian" autolimits="true"/>
+
+  <!-- <option
+        cone="pyramidal"
+        tolerance="1e-9"
+        noslip_iterations="10"
+        impratio="10"
+        integrator="implicitfast"
+        gravity="0 0 -9.81"
+        /> -->
+
+  <option
+        cone="elliptic"
+        tolerance="1e-9"
+        impratio="10"
+        />
+
+  <!-- <option cone="elliptic" impratio="10"/> -->
+  <!-- <option cone="pyramidal"  tolerance="1e-9" impratio="20"/> -->
+
+  <visual>
+    <global offwidth="720" offheight="720"/>
+  </visual>
+
+  <default>
+    <default class="allegro_right">
+      <joint axis="0 1 0" damping="0.0" armature="0.01"/>
+      <!-- <position kp="7" forcerange="-200 200"/> -->
+      <position kp="20" dampratio="1.0" forcerange="-200 200"/>   <!-- Grit tuning 2026-08-29 for forcerange ±1.5: kp 30→20 → t90 0.125 s, overshoot 0.1% (kp30 gave 8%) -->
+      <geom density="1500"/>
+
+      <default class="hand_visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2" material="black"/>
+        <default class="palm_visual">
+          <geom mesh="base_link"/>
+        </default>
+        <default class="base_visual">
+          <geom mesh="link_0.0"/>
+        </default>
+        <default class="proximal_visual">
+          <geom mesh="link_1.0"/>
+        </default>
+        <default class="medial_visual">
+          <geom mesh="link_2.0"/>
+        </default>
+        <default class="distal_visual">
+          <geom mesh="link_3.0"/>
+        </default>
+        <default class="fingertip_visual">
+          <geom pos="0 0 0.0267" material="white" mesh="link_3.0_tip"/>
+        </default>
+        <default class="thumbtip_visual">
+          <geom pos="0 0 0.0423" material="white" mesh="link_15.0_tip"/>
+        </default>
+      </default>
+
+      <default class="hand_collision">
+        <geom group="3" type="box" solref="0.01 1.0" solimp="0.95 0.99 0.005 0.5 2"/>
+        <default class="palm_collision">
+          <geom size="0.0204 0.0565 0.0475" pos="-0.0093 0 -0.0475"/>
+        </default>
+        <default class="base_collision">
+          <geom size="0.0098 0.01375 0.0082" pos="0 0 0.0082"/>
+          <default class="thumb_base_collision">
+            <geom size="0.0179 0.017 0.02275" pos="-0.0179 0.009 0.0145"/>
+          </default>
+        </default>
+        <default class="proximal_collision">
+          <geom size="0.0098 0.01375 0.027" pos="0 0 0.027"/>
+          <default class="thumb_proximal_collision">
+            <geom size="0.0098 0.01375 0.00885" pos="0 0 0.00885"/>
+          </default>
+        </default>
+        <default class="medial_collision">
+          <geom size="0.0098 0.01375 0.0192" pos="0 0 0.0192"/>
+          <default class="thumb_medial_collision">
+            <geom size="0.0098 0.01375 0.0257" pos="0 0 0.0257"/>
+          </default>
+        </default>
+        <default class="distal_collision">
+          <geom size="0.0098 0.01375 0.008" pos="0 0 0.008"/>
+          <default class="thumb_distal_collision">
+            <geom size="0.0098 0.01375 0.0157" pos="0 0 0.0157"/>
+          </default>
+        </default>
+        <default class="fingertip_collision">
+          <geom type="capsule" size="0.012 0.01" pos="0 0 0.019" friction="0.95 0.3 0.1"/>
+          <!-- <geom type="capsule" size="0.012 0.01" pos="0 0 0.019"/> -->
+          <default class="thumbtip_collision">
+            <geom type="capsule" size="0.012 0.008" pos="0 0 0.035" friction="0.95 0.3 0.1"/>
+            <!-- <geom type="capsule" size="0.012 0.008" pos="0 0 0.035"/> -->
+          </default>
+        </default>
+      </default>
+
+      <!-- <default class="slider">
+        <joint axis="1 0 0" type="slide" range="-6 6" damping="200"/>
+        <position kp="3000" ctrlrange="-6 6" forcerange="-200 200"/>
+        <default class="slider_y">
+          <joint axis="0 1 0" type="slide" range="-6 6" damping="200"/>
+          <position kp="3000" ctrlrange="-6 6" forcerange="-200 200"/>
+        </default>
+        <default class="slider_z">
+          <joint axis="0 0 1" type="slide" range="-6 6" damping="200"/>
+          <position kp="3000" ctrlrange="-6 6" forcerange="-200 200"/>
+        </default>
+      </default>
+
+      <default class="wrist">
+        <joint axis="1 0 0" range="-10 10" damping="300"/>
+        <position kp="2000" ctrlrange="-10 10" forcerange="-200 200"/>
+        <default class="wrist_y">
+          <joint axis="0 1 0" range="-10 10" damping="300"/>
+          <position kp="2000" ctrlrange="-10 10" forcerange="-200 200"/>
+        </default>
+        <default class="wrist_z">
+          <joint axis="0 0 1" range="-10 10" damping="300"/>
+          <position kp="2000" ctrlrange="-10 10" forcerange="-200 200"/>
+        </default>
+      </default> -->
+
+      <default class="base">
+        <joint axis="0 0 1" range="-0.47 0.47"/>
+        <position ctrlrange="-0.47 0.47"/>
+      </default>
+      <default class="proximal">
+        <joint range="-0.196 1.61"/>
+        <position ctrlrange="-0.196 1.61"/>
+      </default>
+      <default class="medial">
+        <joint range="-0.174 1.709"/>
+        <position ctrlrange="-0.174 1.709"/>
+      </default>
+      <default class="distal">
+        <joint range="-0.227 1.618"/>
+        <position ctrlrange="-0.227 1.618"/>
+      </default>
+      <default class="thumb_base">
+        <joint axis="-1 0 0" range="0.263 1.396"/>
+        <position ctrlrange="0.263 1.396"/>
+      </default>
+      <default class="thumb_proximal">
+        <joint axis="0 0 1" range="-0.105 1.163"/>
+        <position ctrlrange="-0.105 1.163"/>
+      </default>
+      <default class="thumb_medial">
+        <joint range="-0.189 1.644"/>
+        <position ctrlrange="-0.189 1.644"/>
+      </default>
+      <default class="thumb_distal">
+        <joint range="-0.162 1.719"/>
+        <position ctrlrange="-0.162 1.719"/>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <material name="black" rgba="0.2 0.2 0.2 1"/>
+    <material name="white" rgba="0.9 0.9 0.9 1"/>
+
+    <mesh file="assets/base_link.stl"/>
+    <mesh file="assets/link_0.0.stl"/>
+    <mesh file="assets/link_1.0.stl"/>
+    <mesh file="assets/link_2.0.stl"/>
+    <mesh file="assets/link_3.0.stl"/>
+    <mesh file="assets/link_3.0_tip.stl"/>
+    <mesh file="assets/link_12.0_right.stl"/>
+    <mesh file="assets/link_13.0.stl"/>
+    <mesh file="assets/link_14.0.stl"/>
+    <mesh file="assets/link_15.0.stl"/>
+    <mesh file="assets/link_15.0_tip.stl"/>
+  </asset>
+
+  <worldbody>
+    <body name="alle_r_hand:mocap" mocap="true" pos="0. 0. 1.0">
+        <geom type="box" size=".01 .01 .01" contype="0" conaffinity="0"/>
+        <site name="alle_rh_mocap" type="box" size=".01 .01 .01" />
+    </body>
+    <!-- <body name="allegro_rh_palm" pos="-0.0475 0 0 "> -->
+    <!-- <body name="allegro_rh_palm" pos="0 0 0 "> -->
+      <!-- <joint name="wrist_free_joint" type="free" />  -->
+      <!-- <joint name="slide_x" class="slider" axis="1 0 0" />
+      <joint name="slide_y" class="slider_y" axis="0 1 0" />
+      <joint name="slide_z" class="slider_z" axis="0 0 1" />
+      <joint name="wrist_x" class="wrist"/>
+      <joint name="wrist_y" class="wrist_y"/>
+      <joint name="wrist_z" class="wrist_z"/> -->
+      <!-- <body name="palm" pos="0.0475 0 0" quat="0 1 0 1" childclass="allegro_right"> -->
+      <body name="alle_r_palm" pos="0 0 1.0" childclass="allegro_right">
+        <camera name="track" pos="1.258 -1.248 0.391" xyaxes="0.768 0.741 0.000 -0.201 0.122 0.987" mode="trackcom"/>
+
+        <joint name="alle_rh_free_joint" type="free" damping="3.0" armature="0.5"/> 
+        <inertial mass="0.8" pos="0 0 -0.05" diaginertia="0.005 0.005 0.005"/>
+        <geom class="palm_visual" mesh="base_link"/>
+        <geom class="palm_collision"/>
+        <site name="allegro_rh_palm_touch" type="box" pos="0.01 -0.0 -0.026" size="0.0405 0.06 0.067" euler="0.0 0. 0." rgba="1 0 0 0.0"/> 
+  
+        
+        <body name="alle_r_arm_part" pos="0 0 -0.2" quat="1 0 0 0 ">      
+          <geom type="box" size="0.06 0.06 0.08" contype="1" conaffinity="1" rgba="0 0 0 0.5"/>      
+          <site name="allegro_r_arm_part_touch" type="box" pos="0.0 0.0 0.0" size="0.08 0.09 0.09" rgba="0 1 0 0."/>
+        </body>
+        <!-- First finger -->
+        <body name="alle_r_ff_base" pos="0 0.0435 -0.001542" quat="0.999048 -0.0436194 0 0">
+          <joint name="rh_ffj0" class="base"/>
+          <inertial mass="0.03" pos="0.000 -0.00 0.01" diaginertia="1e-4 1e-4 1e-4"/>
+          <geom class="base_visual"/>
+          <!-- <geom class="base_collision"/> -->
+          <body name="alle_r_ff_proximal" pos="0 0 0.0164">
+            <joint name="rh_ffj1" class="proximal"/>
+            <inertial mass="0.03" pos="0.000 -0.00 0.0275" diaginertia="1e-4 1e-4 1e-4"/>
+            <!-- <geom class="proximal_visual"/> -->
+            <geom class="proximal_visual" rgba="0.231373 0.480392 0.705882 1"/>
+            <geom class="proximal_collision"/>
+            <site name="allegro_rh_ff_1_touch" type="box" pos="0.009 -0.00 0.0325" size="0.018 0.016 0.05" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/> 
+      
+
+            <body name="alle_r_ff_medial" pos="0 0 0.054">
+              <joint name="rh_ffj2" class="medial"/>
+              <inertial mass="0.03" pos="0.000 -0.00 0.0175" diaginertia="1e-4 1e-4 1e-4"/>
+              <!-- <geom class="medial_visual"/> -->
+              <geom class="medial_visual" rgba="0.231373 0.580392 0.705882 1"/>
+              <geom class="medial_collision"/>
+              <site name="allegro_rh_ff_2_touch" type="box" pos="0.009 -0.00 0.0225" size="0.018 0.015 0.033" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/> 
+        
+
+              <body name="alle_r_ff_distal" pos="0 0 0.0384">
+                <joint name="rh_ffj3" class="distal"/>
+                <inertial mass="0.03" pos="0.000 -0.00 0.0225" diaginertia="1e-4 1e-4 1e-4"/>
+                <!-- <geom class="distal_visual"/> -->
+
+                <body name="alle_r_ff_tip">
+                  <inertial mass="0.01" pos="0.000 -0.00 0.0225" diaginertia="1e-6 1e-6 1e-6"/>
+                  <geom class="distal_visual" rgba="0.231373 0.680392 0.705882 1"/>
+                  <geom class="distal_collision"/>
+                  <geom class="fingertip_visual"/>
+                  <geom class="fingertip_collision"/>
+                  <site name="allegro_rh_ff_3_touch" type="box" pos="0.011 -0.00 0.0265" size="0.019 0.015 0.033" euler="0.0 -0.0 0." rgba="1 0 0 0."/> 
+
+                  <body name="alle_r_ff_end" pos="0 0 0.035"/>
+                  <body name="alle_r_ff_face_end" pos="0.007 0.    0.036"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <!-- Middle finger -->
+        <body name="alle_r_mf_base" pos="0 0 0.0007">
+          <joint name="rh_mfj0" class="base"/>
+          <inertial mass="0.03" pos="0.000 -0.00 0.01" diaginertia="1e-4 1e-4 1e-4"/>
+          <geom class="base_visual"/>
+          <!-- <geom class="base_collision"/> -->
+          <body name="alle_r_mf_proximal" pos="0 0 0.0164">
+            <joint name="rh_mfj1" class="proximal"/>
+            <inertial mass="0.03" pos="0.000 -0.00 0.0275" diaginertia="1e-4 1e-4 1e-4"/>
+            <!-- <geom class="proximal_visual"/> -->
+            <geom class="proximal_visual" rgba="0.513726 0.737255 0.407843 1"/>
+            <geom class="proximal_collision"/>
+            <site name="allegro_rh_mf_1_touch" type="box" pos="0.009 -0.00 0.0355" size="0.018 0.016 0.051" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/> 
+      
+           
+            <body name="alle_r_mf_medial" pos="0 0 0.054">
+              <joint name="rh_mfj2" class="medial"/>
+              <inertial mass="0.03" pos="0.000 -0.00 0.0175" diaginertia="1e-4 1e-4 1e-4"/>
+              <!-- <geom class="medial_visual"/> -->
+              <geom class="medial_visual" rgba="0.613726 0.737255 0.407843 1"/>
+              <geom class="medial_collision"/>
+              <site name="allegro_rh_mf_2_touch" type="box" pos="0.009 -0.00 0.0255" size="0.017 0.016 0.041" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/>
+        
+
+              <body name="alle_r_mf_distal" pos="0 0 0.0384">
+                <joint name="rh_mfj3" class="distal"/>
+                <inertial mass="0.03" pos="0.000 -0.00 0.0225" diaginertia="1e-4 1e-4 1e-4"/>
+                <!-- <geom class="distal_visual"/> -->
+                
+                <body name="alle_r_mf_tip">
+                  <inertial mass="0.01" pos="0.000 -0.00 0.0225" diaginertia="1e-6 1e-6 1e-6"/>
+                  <geom class="distal_visual" rgba="0.713726 0.737255 0.407843 1"/>
+                  <geom class="distal_collision"/>
+                  <geom class="fingertip_visual"/>
+                  <geom class="fingertip_collision"/>
+                  <site name="allegro_rh_mf_3_touch" type="box" pos="0.011 -0.00 0.0265" size="0.018 0.016 0.033" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/>
+            
+                  <body name="alle_r_mf_end" pos="0 0 0.035"/>
+                  <body name="alle_r_mf_face_end" pos="0.007 0 0.036"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <!-- Ring finger -->
+        <body name="alle_r_rf_base" pos="0 -0.0435 -0.001542" quat="0.999048 0.0436194 0 0">
+          <joint name="rh_rfj0" class="base"/>
+          <inertial mass="0.03" pos="0.000 -0.00 0.01" diaginertia="1e-4 1e-4 1e-4"/>
+          <geom class="base_visual"/>
+          <!-- <geom class="base_collision"/> -->
+          <body name="alle_r_rf_proximal" pos="0 0 0.0164">
+            <joint name="rh_rfj1" class="proximal"/>
+            <inertial mass="0.03" pos="0.000 -0.00 0.0275" diaginertia="1e-4 1e-4 1e-4"/>
+            <!-- <geom class="proximal_visual"/> -->
+            <geom class="proximal_visual" rgba="0.972549 0.529412 0.00392157 1"/>
+            <geom class="proximal_collision"/>
+            <site name="allegro_rh_rf_1_touch" type="box" pos="0.009 -0.00 0.0325" size="0.018 0.015 0.05" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/> 
+      
+            <body name="alle_r_rf_medial" pos="0 0 0.054">
+              <joint name="rh_rfj2" class="medial"/>
+              <inertial mass="0.03" pos="0.000 -0.00 0.0175" diaginertia="1e-4 1e-4 1e-4"/>
+              <!-- <geom class="medial_visual"/> -->
+              <geom class="medial_visual" rgba="0.972549 0.729412 0.00392157 1"/>
+              <geom class="medial_collision"/>
+              <site name="allegro_rh_rf_2_touch" type="box" pos="0.009 -0.00 0.0255" size="0.017 0.015 0.037" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/>
+        
+              <body name="alle_r_rf_distal" pos="0 0 0.0384">
+                <joint name="rh_rfj3" class="distal"/>
+                <inertial mass="0.03" pos="0.000 -0.00 0.0175" diaginertia="1e-4 1e-4 1e-4"/>
+                <!-- <geom class="distal_visual"/> -->
+
+                <body name="alle_r_rf_tip">
+                  <inertial mass="0.01" pos="0.000 -0.00 0.0225" diaginertia="1e-6 1e-6 1e-6"/>
+                  <geom class="distal_visual" rgba="0.972549 0.929412 0.00392157 1"/>
+                  <geom class="distal_collision"/> 
+                  <geom class="fingertip_visual"/>
+                  <geom class="fingertip_collision"/>
+                  <site name="allegro_rh_rf_3_touch" type="box" pos="0.011 -0.00 0.0275" size="0.019 0.015 0.033" euler="0.0 -0.0 0." rgba="1 0 0 0."/>
+            
+                  <body name="alle_r_rf_end" pos="0 0 0.035"/>
+                  <body name="alle_r_rf_face_end" pos="0.007 0 0.036"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <!-- Thumb -->
+        <body name="alle_r_th_base" pos="-0.0182 0.019333 -0.045987" quat="0.477714 -0.521334 -0.521334 -0.477714">
+          <joint name="rh_thj0" class="thumb_base"/>
+          <inertial mass="0.03" pos="0 0 0" diaginertia="1e-4 1e-4 1e-4"/>
+          <geom class="hand_visual" mesh="link_12.0_right"/>
+          <!-- <geom class="thumb_base_collision"/> -->
+          <body name="alle_r_th_proximal" pos="-0.027 0.005 0.0399">
+            <joint name="rh_thj1" class="thumb_proximal"/>
+            <inertial mass="0.03" pos="0.000 -0.00 0.01" diaginertia="1e-4 1e-4 1e-4"/>
+            <!-- <geom class="hand_visual" mesh="link_13.0"/> -->
+            <geom class="hand_visual" mesh="link_13.0" rgba="0.7 0.74902 0.913725 1"/>
+            <geom class="thumb_proximal_collision"/>
+            <site name="allegro_rh_th_1_touch" type="box" pos="0.007 -0.00 0.01" size="0.015 0.016 0.018" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/>  
+      
+
+            <body name="alle_r_th_medial" pos="0 0 0.0177">
+              <joint name="rh_thj2" class="thumb_medial"/>
+              <inertial mass="0.03" pos="0.000 -0.00 0.025" diaginertia="1e-4 1e-4 1e-4"/>
+              <!-- <geom class="hand_visual" mesh="link_14.0"/> -->
+              <geom class="hand_visual" mesh="link_14.0" rgba="0.7 0.84902 0.913725 1"/>
+              <geom class="thumb_medial_collision"/>
+              <site name="allegro_rh_th_2_touch" type="box" pos="0.009 -0.00 0.023" size="0.018 0.016 0.0355" euler="0.0 -0.0 0." rgba="1 0 0 0.0"/>
+        
+              <body name="alle_r_th_distal" pos="0 0 0.0514">
+                <joint name="rh_thj3" class="thumb_distal"/>
+                <inertial mass="0.03" pos="0.000 -0.00 0.025" diaginertia="1e-4 1e-4 1e-4"/>
+                <!-- <geom class="hand_visual" mesh="link_15.0"/> -->
+                <body name="alle_r_th_tip">
+                  <inertial mass="0.01" pos="0.000 -0.00 0.0275" diaginertia="1e-6 1e-6 1e-6"/>
+                  <geom class="hand_visual" mesh="link_15.0" rgba="0.7 0.94902 0.913725 1"/>
+                  <geom class="thumb_distal_collision"/>
+                  <geom class="thumbtip_visual"/>
+                  <geom class="thumbtip_collision"/>
+                  <site name="allegro_rh_th_3_touch" type="box" pos="0.009 -0.00 0.0285" size="0.018 0.019 0.037" euler="0.0 -0.0 0." rgba="1 0 0 0."/>
+            
+                  <body name="alle_r_th_end" pos="0 0 0.045"/>
+                  <body name="alle_r_th_face_end" pos="0.008 0 0.05"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    <!-- </body> -->
+  </worldbody>
+
+  <contact>
+    <exclude body1="alle_r_palm" body2="alle_r_ff_base"/>
+    <exclude body1="alle_r_palm" body2="alle_r_mf_base"/>
+    <exclude body1="alle_r_palm" body2="alle_r_rf_base"/>
+    <exclude body1="alle_r_palm" body2="alle_r_th_base"/>
+    <exclude body1="alle_r_palm" body2="alle_r_th_proximal"/>
+  </contact>
+
+  <sensor>
+    <touch name="allegro_rh_palm_body_touch" site="allegro_rh_palm_touch" />
+    <touch name="allegro_r_arm_part_touch" site="allegro_r_arm_part_touch" /> 
+
+    <touch name="allegro_rh_ff_1_body_touch" site="allegro_rh_ff_1_touch" />
+    <touch name="allegro_rh_ff_2_body_touch" site="allegro_rh_ff_2_touch" />
+    <touch name="allegro_rh_ff_3_body_touch" site="allegro_rh_ff_3_touch" />
+
+    <touch name="allegro_rh_mf_1_body_touch" site="allegro_rh_mf_1_touch" />
+    <touch name="allegro_rh_mf_2_body_touch" site="allegro_rh_mf_2_touch" /> 
+    <touch name="allegro_rh_mf_3_body_touch" site="allegro_rh_mf_3_touch" />
+
+    <touch name="allegro_rh_rf_1_body_touch" site="allegro_rh_rf_1_touch" />
+    <touch name="allegro_rh_rf_2_body_touch" site="allegro_rh_rf_2_touch" /> 
+    <touch name="allegro_rh_rf_3_body_touch" site="allegro_rh_rf_3_touch" />
+    
+    <touch name="allegro_rh_thumb_1_body_touch" site="allegro_rh_th_1_touch" />
+    <touch name="allegro_rh_thumb_2_body_touch" site="allegro_rh_th_2_touch" />
+    <touch name="allegro_rh_thumb_3_body_touch" site="allegro_rh_th_3_touch"/>
+    <!-- <touch name="allegro_rh_thumb_4_body_touch" site="allegro_rh_th_4_touch"/> -->
+
+    <!-- Self collision 쟤는 것 -->
+    <contact name="allegro_rh_palm_self_coll" body1="alle_r_palm"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_ff_1_self_coll" body1="alle_r_ff_proximal"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="allegro_rh_ff_2_self_coll" body1="alle_r_ff_medial"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_ff_3_self_coll" body1="alle_r_ff_tip"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_mf_1_self_coll" body1="alle_r_mf_proximal"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="allegro_rh_mf_2_self_coll" body1="alle_r_mf_medial"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="allegro_rh_mf_3_self_coll" body1="alle_r_mf_tip"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_rf_1_self_coll" body1="alle_r_rf_proximal"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_rf_2_self_coll" body1="alle_r_rf_medial"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="allegro_rh_rf_3_self_coll" body1="alle_r_rf_tip"    subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_thumb_1_self_coll" body1="alle_r_th_proximal" subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_thumb_2_self_coll" body1="alle_r_th_medial" subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="allegro_rh_thumb_3_self_coll" body1="alle_r_th_tip" subtree2="alle_r_palm"  reduce="maxforce" num="1"  data="found force pos normal"/>
+  </sensor> 
+
+  <actuator>
+    <!-- wrist -->
+    <!-- <position name="rh_W_slide_x" joint="slide_x" class="slider"/>
+    <position name="rh_W_slide_y" joint="slide_y" class="slider_y"/>
+    <position name="rh_W_slide_z" joint="slide_z" class="slider_z"/>
+    <position name="rh_W_rot_x" joint="wrist_x" class="wrist"/>
+    <position name="rh_W_rot_y" joint="wrist_y" class="wrist_y"/>
+    <position name="rh_W_rot_z" joint="wrist_z" class="wrist_z"/> -->
+
+    <!-- finger -->
+    <position name="rh_ffa0" joint="rh_ffj0" class="base"/>
+    <position name="rh_ffa1" joint="rh_ffj1" class="proximal"/>
+    <position name="rh_ffa2" joint="rh_ffj2" class="medial"/>
+    <position name="rh_ffa3" joint="rh_ffj3" class="distal"/>
+    <position name="rh_mfa0" joint="rh_mfj0" class="base"/>
+    <position name="rh_mfa1" joint="rh_mfj1" class="proximal"/>
+    <position name="rh_mfa2" joint="rh_mfj2" class="medial"/>
+    <position name="rh_mfa3" joint="rh_mfj3" class="distal"/>
+    <position name="rh_rfa0" joint="rh_rfj0" class="base"/>
+    <position name="rh_rfa1" joint="rh_rfj1" class="proximal"/>
+    <position name="rh_rfa2" joint="rh_rfj2" class="medial"/>
+    <position name="rh_rfa3" joint="rh_rfj3" class="distal"/>
+    <position name="rh_tha0" joint="rh_thj0" class="thumb_base"/>
+    <position name="rh_tha1" joint="rh_thj1" class="thumb_proximal"/>
+    <position name="rh_tha2" joint="rh_thj2" class="thumb_medial"/>
+    <position name="rh_tha3" joint="rh_thj3" class="thumb_distal"/>
+  </actuator>
+
+  <contact>
+      <exclude body1="alle_r_hand:mocap" body2="alle_r_palm" />
+
+      <exclude body1="alle_r_palm" body2="alle_r_ff_base" />
+      <exclude body1="alle_r_palm" body2="alle_r_mf_base" />
+      <exclude body1="alle_r_palm" body2="alle_r_rf_base" />
+      <exclude body1="alle_r_palm" body2="alle_r_th_base" />
+      <exclude body1="alle_r_palm" body2="alle_r_ff_proximal" />
+      <exclude body1="alle_r_palm" body2="alle_r_mf_proximal" />
+      <exclude body1="alle_r_palm" body2="alle_r_rf_proximal" />
+      <exclude body1="alle_r_palm" body2="alle_r_th_proximal" />
+      <exclude body1="alle_r_palm" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_palm" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_palm" body2="alle_r_rf_medial" />
+      <exclude body1="alle_r_palm" body2="alle_r_th_medial" />
+
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_mf_proximal" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_rf_proximal" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_th_proximal" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_rf_medial" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_ff_proximal" body2="alle_r_rf_tip" />
+      
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_ff_proximal" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_rf_proximal" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_th_proximal" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_rf_medial" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_mf_proximal" body2="alle_r_rf_tip" />
+
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_ff_proximal" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_mf_proximal" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_th_proximal" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_rf_medial" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_rf_proximal" body2="alle_r_rf_tip" />
+
+      <exclude body1="alle_r_th_proximal" body2="alle_r_ff_proximal" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_mf_proximal" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_th_proximal" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_rf_medial" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_th_proximal" body2="alle_r_rf_tip" />
+
+      <exclude body1="alle_r_ff_medial" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_rf_medial" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_ff_medial" body2="alle_r_rf_tip" />
+
+      <exclude body1="alle_r_mf_medial" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_rf_medial" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_mf_medial" body2="alle_r_rf_tip" />
+
+      <exclude body1="alle_r_rf_medial" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_rf_medial" body2="alle_r_rf_tip" />
+
+      <exclude body1="alle_r_th_medial" body2="alle_r_ff_medial" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_mf_medial" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_th_medial" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_mf_distal" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_th_medial" body2="alle_r_rf_tip" />
+      
+      <exclude body1="alle_r_ff_distal" body2="alle_r_rf_distal" />
+      <exclude body1="alle_r_ff_distal" body2="alle_r_ff_tip" />
+      <exclude body1="alle_r_ff_distal" body2="alle_r_rf_tip" />
+      <exclude body1="alle_r_mf_distal" body2="alle_r_th_distal" />
+      <exclude body1="alle_r_mf_distal" body2="alle_r_mf_tip" />
+      <exclude body1="alle_r_rf_distal" body2="alle_r_ff_distal" />
+      <exclude body1="alle_r_rf_distal" body2="alle_r_ff_tip" />
+  </contact>
+
+  <equality>
+    <!-- <weld body1="alle_r_hand:mocap" body2="alle_r_palm" anchor="0 0 0" solimp="0.9 0.95 0.001" solref="0.02 1"></weld> -->
+    <!-- <weld body1="alle_r_hand:mocap" body2="alle_r_palm" anchor="0 0 0" solimp="0.85 0.92 0.001" solref="0.04 1"></weld> -->
+    <weld body1="alle_r_hand:mocap" body2="alle_r_palm" anchor="0 0 0" solimp="0.9 0.95 0.001" solref="0.04 1"></weld>
+
+    <!-- <connect 
+    name="hand_mocap_connect"
+    site1="hand_mocap"
+    site2="palm_mocap"
+    solimp="0.85 0.95 0.001" 
+    solref="0.03 1"
+    /> -->
+  </equality>
+</mujoco>

@@ -1,0 +1,55 @@
+<mujoco model="top_watertight_tiny">
+  <default>
+    <default group="2" type="mesh" contype="0" conaffinity="0">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default group="3" type="mesh">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+  <asset>
+    <mesh file="top_watertight_tiny.obj"/>
+    <mesh file="top_watertight_tiny_collision_0.obj"/>
+    <mesh file="top_watertight_tiny_collision_1.obj"/>
+    <mesh file="top_watertight_tiny_collision_2.obj"/>
+    <mesh file="top_watertight_tiny_collision_3.obj"/>
+    <mesh file="top_watertight_tiny_collision_4.obj"/>
+    <mesh file="top_watertight_tiny_collision_5.obj"/>
+    <mesh file="top_watertight_tiny_collision_6.obj"/>
+    <mesh file="top_watertight_tiny_collision_7.obj"/>
+    <mesh file="top_watertight_tiny_collision_8.obj"/>
+    <mesh file="top_watertight_tiny_collision_9.obj"/>
+    <mesh file="top_watertight_tiny_collision_10.obj"/>
+    <mesh file="top_watertight_tiny_collision_11.obj"/>
+    <mesh file="top_watertight_tiny_collision_12.obj"/>
+    <mesh file="top_watertight_tiny_collision_13.obj"/>
+    <mesh file="top_watertight_tiny_collision_14.obj"/>
+    <mesh file="top_watertight_tiny_collision_15.obj"/>
+    <mesh file="top_watertight_tiny_collision_16.obj"/>
+    <mesh file="top_watertight_tiny_collision_17.obj"/>
+  </asset>
+  <worldbody>
+    <body name="top_watertight_tiny">
+      <freejoint/>
+      <geom mesh="top_watertight_tiny" group="2" type="mesh" rgba="0.4 0.2 0.7 1" contype="0" conaffinity="0"/>
+      <geom mesh="top_watertight_tiny_collision_0" rgba="0.20229317502027622 0.5593707499433282 0.1768660645963801 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_1" rgba="0.38988327720262594 0.026453023188534375 0.7158144933441691 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_2" rgba="0.41634416508141336 0.6146423084752962 0.449605122721051 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_3" rgba="0.14876053033735637 0.3370912123189568 0.5168839835278337 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_4" rgba="0.6713280488440589 0.4383982201345068 0.4212741586792762 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_5" rgba="0.632756677521681 0.247876290561988 0.11272600634847973 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_6" rgba="0.47368285123528087 0.7162642410263819 0.7304983867073019 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_7" rgba="0.5532676294085539 0.5348104189366012 0.8631859902236199 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_8" rgba="0.5562935954247225 0.9036795614096016 0.3688566872184441 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_9" rgba="0.049862386243507584 0.5065625627275031 0.9210775974638412 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_10" rgba="0.5084629303185367 0.21150866983903205 0.598428520265262 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_11" rgba="0.7287852257766577 0.6956434997202986 0.0661371819211728 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_12" rgba="0.969960875972942 0.8549358615491154 0.8631375097406778 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_13" rgba="0.48477312546422835 0.7531679830160246 0.6718192572403285 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_14" rgba="0.05504583032713173 0.882334197134392 0.4653138649713967 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_15" rgba="0.6791003345138711 0.07097447222455833 0.6952648918844212 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_16" rgba="0.17012907617239492 0.8587654888373657 0.2883840612151275 1" group="3" type="mesh"/>
+      <geom mesh="top_watertight_tiny_collision_17" rgba="0.3968356474473512 0.5256996159641439 0.10567266186844515 1" group="3" type="mesh"/>
+    </body>
+  </worldbody>
+</mujoco>

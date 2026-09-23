@@ -1,0 +1,33 @@
+<mujoco model="bottom_watertight_tiny">
+  <default>
+    <default group="2" type="mesh" contype="0" conaffinity="0">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default group="3" type="mesh">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+  <asset>
+    <mesh file="bottom_watertight_tiny.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_0.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_1.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_2.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_3.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_4.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_5.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_6.obj"/>
+  </asset>
+  <worldbody>
+    <body name="bottom_watertight_tiny">
+      <freejoint/>
+      <geom mesh="bottom_watertight_tiny" group="2" type="mesh" rgba="1 0 1 0.8" contype="0" conaffinity="0"/>
+      <geom mesh="bottom_watertight_tiny_collision_0" rgba="0.9879233995320389 0.16102971469493632 0.7461707969698452 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_1" rgba="0.06597117280423936 0.6113509218994253 0.9830902918167367 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_2" rgba="0.09138968266190184 0.18010842363565627 0.3442808974351388 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_3" rgba="0.6685137749599078 0.10681276398460071 0.969036983918545 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_4" rgba="0.7092459463000642 0.5326357503456379 0.8691400552962312 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_5" rgba="0.4504006411784033 0.7672259048855568 0.6495549087220401 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_6" rgba="0.9440346137089726 0.03689103613727995 0.29797799500642985 1" group="3" type="mesh"/>
+    </body>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,16 @@
+<mujoco model="top_watertight_tiny">
+
+  <asset>
+    <mesh file="top_watertight_tiny.obj"/>
+    <mesh file="top_watertight_tiny_collision_0.obj"/>
+    <mesh file="top_watertight_tiny_collision_1.obj"/>
+  </asset>
+  <worldbody>
+    <body name="top_watertight_tiny">
+      <freejoint/>
+      <geom solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3" rgba="0.4 0.2 0.7 1" mesh="top_watertight_tiny" group="2" type="mesh" contype="0" conaffinity="0"/>
+      <geom solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3" mesh="top_watertight_tiny_collision_0" rgba="0.03970809498099781 0.22894265105522837 0.18557541909397812 1" group="3" type="mesh"/>
+      <geom solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3" mesh="top_watertight_tiny_collision_1" rgba="0.3335562174607374 0.9031850623813116 0.7499284616863968 1" group="3" type="mesh"/>
+    </body>
+  </worldbody>
+</mujoco>

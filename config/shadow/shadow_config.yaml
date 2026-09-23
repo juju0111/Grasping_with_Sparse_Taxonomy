@@ -1,0 +1,33 @@
+seed: 1
+
+config_path: ""
+config_name: ""
+restore_checkpoint_dir: ""
+restore_checkpoint_path: ""
+
+training:
+  # training config & data path 
+  exp_name: "shadow_fixed"   
+
+  load_trained_policy: False  # [True, False]
+  weight: "" # model path
+
+  hand_xml_path: ""
+  hand_wrist_name: ""
+  hand_name: ""
+
+  num_cluster: 1
+
+  approach_step: 60
+  grasp_step: 40
+  lift_step: 0 # fix : 0, float : 30
+  reward_clip: -4.0
+  inner_step: 4
+
+  bias_weight: 0.0 # step 1 : 0.01 # step 2 : 0.005 
+
+  architecture:
+    policy_net: [256, 256]
+    value_net: [256, 256]
+    action_dim: 22
+    obs_dim: 160

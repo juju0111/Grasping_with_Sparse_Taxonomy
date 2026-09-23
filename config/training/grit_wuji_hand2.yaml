@@ -1,0 +1,10 @@
+defaults:
+  - base
+  - _self_ 
+
+# hand name and type must be written as matching pairs.  
+using_hand_name_list:
+  - wuji_hand2 
+hand_type_list:
+  - right   
+  # - left  

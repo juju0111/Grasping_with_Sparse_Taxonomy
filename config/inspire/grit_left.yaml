@@ -1,0 +1,60 @@
+defaults:
+  - inspire_config
+  - _self_ 
+train_teacher: True
+# [S]ingle_[T]axonomy_[S]ingle_[O]bj_[A]ll_[D]ataset_test
+save_dir_name: "grit"
+
+restore_checkpoint_dir: ""
+restore_checkpoint_path: ""
+restore_value_fn: True
+
+verbose: False
+do_wandb: False 
+wandb_name: "" 
+tags: ['inspire', 'Ours']
+log_training_reward: False 
+
+do_domain_randomize: False 
+do_curriculum: False # added here (per-hand override)
+do_normalize_observations: False  
+use_obs_mask: False 
+use_table_pcd: False 
+
+Training: # training config 
+  exp_name: 'Grit_Env_With_Obj_Coll'
+
+  # Grasp  
+  grasp_type: 'grasp' 
+  multi_taxonomy: True 
+  do_adaptive_taxonomy: False
+  taxonomy_type: 'medium_diameter'
+
+  # Hand
+  # gain tuned (kp=15→60, kv=0→3.34 critical): removes jitter on the four fingers and thumb lag.
+  # Original values were kp=15/kv=0 in inspire_rh_w_fore_arm_touch_contact.xml.
+  hand_xml_path: "inspire/inspire_lh_w_fore_arm_touch_contact_kp20.xml"
+  hand_name: "inspire"
+  hand_type: 'left' 
+  hand_wrist_name: "inspire_lh_palm"
+
+  palm_sensor_idx: 0  
+  fore_arm_sensor_idx: 1 
+  finger_motor_num: 6 # ok 
+  finger_link_num: 12 # ok 
+  hand_qvel_num: 18 # ok 
+
+  ctrl_joint_idx: [0,1,4,6,8,10] # coupled mechanism 
+  tip_body_idx: [4,6,8,10,12] # For contact in sensor_body_name_list
+  tip_end_name: _tip 
+
+  # Action scale 
+  wrist_transl_scale: 80.0 
+  wrist_rot_scale: 40.0 # Damping issue 
+  finger_action_scale: 5.0 # 5.0  
+
+# Finger actuator force cap ±N·m, applied to every finger position actuator at env build
+# (hand_utils.apply_finger_gain_override_from_config; ignored when the training cfg / run
+# snapshot carries a non-null finger_gain.forcerange, or env GRIT_FINGER_FORCERANGE is set).
+finger_gain:
+  forcerange: 2.0   # approximate real-robot finger torque limit

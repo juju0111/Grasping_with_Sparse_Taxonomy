@@ -1,0 +1,43 @@
+defaults:
+  - allegro_config
+  - _self_
+train_teacher: True
+# [S]ingle_[T]axonomy_[S]ingle_[O]bj_[A]ll_[D]ataset_test
+save_dir_name: "grit"
+
+restore_checkpoint_dir: ""
+restore_checkpoint_path: ""
+restore_value_fn: True
+
+verbose: False
+do_wandb: False 
+wandb_name: "" 
+tags: ['allegro', 'Ours']
+log_training_reward: False 
+
+do_domain_randomize: False 
+do_curriculum: False # added here (per-hand override)
+do_normalize_observations: False  
+use_obs_mask: False 
+use_table_pcd: False 
+
+Training: # training config 
+  exp_name: 'Grit_Env_With_Obj_Coll'
+
+  # Grasp  
+  grasp_type: 'grasp' 
+  multi_taxonomy: True 
+  do_adaptive_taxonomy: False
+  taxonomy_type: 'medium_diameter'
+
+  # Hand  
+  hand_xml_path: 'wonik_allegro/allegro_rh_w_fore_arm_touch_contact_kp20.xml'
+  hand_name: 'allegro' 
+  hand_type: 'right' 
+  hand_wrist_name: "alle_r_palm"
+
+# Finger actuator force cap ±N·m, applied to every finger position actuator at env build
+# (hand_utils.apply_finger_gain_override_from_config; ignored when the training cfg / run
+# snapshot carries a non-null finger_gain.forcerange, or env GRIT_FINGER_FORCERANGE is set).
+finger_gain:
+  forcerange: 1.5   # approximate real-robot finger torque limit

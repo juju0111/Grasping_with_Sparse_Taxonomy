@@ -1,0 +1,50 @@
+defaults:
+  - shadow_config
+  - _self_ 
+train_teacher: True
+# [S]ingle_[T]axonomy_[S]ingle_[O]bj_[A]ll_[D]ataset_test
+save_dir_name: "grit"
+
+restore_checkpoint_dir: ""
+restore_checkpoint_path: ""
+restore_value_fn: True
+
+verbose: False
+do_wandb: False 
+wandb_name: "" 
+tags: ['shadow', 'Ours']
+log_training_reward: False 
+
+do_domain_randomize: False 
+do_normalize_observations: False  
+use_obs_mask: False 
+use_table_pcd: False 
+
+nworld: 100
+con_per_env: 150   # kept in sync with base.yaml (avoids contact saturation → penetration during grasp)
+njmax_muiltiply: 8
+n_steps: 4
+n_sub_env: 1
+action_repeat: 1 
+
+Training: # training config 
+  exp_name: 'Grit_Env_With_Obj_Coll'
+
+  # Grasp  
+  grasp_type: 'grasp' 
+  multi_taxonomy: True 
+  do_adaptive_taxonomy: False
+  taxonomy_type: 'medium_diameter'
+
+  # Hand 
+  hand_xml_path: "shadow/right_hand_w_fore_arm_touch_contact.xml"
+  hand_name: "shadow"
+  hand_type: 'right' 
+  hand_wrist_name: "shadow_rh_palm"
+  
+
+# Finger actuator force cap ±N·m, applied to every finger position actuator at env build
+# (hand_utils.apply_finger_gain_override_from_config; ignored when the training cfg / run
+# snapshot carries a non-null finger_gain.forcerange, or env GRIT_FINGER_FORCERANGE is set).
+finger_gain:
+  forcerange: 5.0   # chosen within the Menagerie range (±1~10)

@@ -1,0 +1,381 @@
+# hand name and type must be written as matching pairs.  
+using_hand_name_list:
+  - TODO 
+hand_type_list:
+  - right   
+  # - left  
+
+# ── Dual-hand (bimanual) scene ────────────────────────────────────────────
+# When hand_type_list contains both right and left, build_sub_env by default builds
+# one DualHandSubEnv per hand pair (right + left in one scene, shared object) and exposes
+# a per-hand LFHandView through env_list (one handler per hand, a single physics step,
+# joint reset via OR of the done masks). false → a separate scene per hand.
+# An explicit build with env_type: dual_hand is also possible (train.py / builders.py).
+dual_hand: true
+dual_y_offset: 0.4   # initial y offset of the second (left) hand's mocap/arm root [m]
+
+# Tasks to run 
+# task_type: # 'tracking', 'gesture', 'grasp', 'push', 'in_hand_manipulation', 'object_transport'
+#   - grasp
+
+
+Training:
+  with_table: True 
+  table_height: 0.6
+  table_xml_path: "table/base_table.xml"
+  floor_xml_path: "floor/floor_simple_white.xml"
+
+  # Object 
+  n_obj: 1
+  n_pcd: 2048
+  xy_offset_range: [-0.001, 0.001]
+  friction: [1.2, 0.5, 0.4] 
+
+  # Where objects come from — every env build entry point (train/inference/eval/distill)
+  # reads this single key (builders.obj_spec_provider_from_config).
+  #   dataset   : mesh dataset under asset/object (default)
+  #   primitive : procedurally generated from the primitive_object block below (obj_idxs must be null)
+  #   mixed     : a mesh_frac fraction of the variants comes from the mesh dataset (obj_idxs pool),
+  #               the rest is procedurally generated. Both kinds share one warp scene; a
+  #               separate slot layout keeps the colliders apart
+  #               (see the comments in primitive_object.build_mixed_obj_spec_lst)
+  object_source: dataset
+
+  # ── Procedural primitive object (Play2Perfect style) ──────────────────────
+  # Used only when object_source: primitive.
+  #   grit.util.primitive_object.make_obj_spec_provider_from_config(cfg) →
+  #   orchestrator.build_sub_env(obj_spec_provider=...)
+  # Older yamls without this block fall back to the dataclass defaults.
+  # Units: length in m, density in kg/m³. Every range is [lo, hi] uniform.
+  primitive_object:
+    # One-knob resizing: a scale multiplied into every length, cross-section and
+    #    size cap (density unchanged → mass grows as scale³). 1.5 = 1.5× larger objects.
+    size_scale: 1.0
+
+    # Component kinds (primary = the grasp region, the rest are lumps attached to it).
+    # Note: every kind used here must have a slot in slot_layout.
+    primary_kinds:   ["box", "capsule"]
+    secondary_kinds: ["box", "capsule"]
+
+    # Number of primitives per object (integer [lo, hi], inclusive).
+    # From the 2nd part on, each part attaches to one of the already placed parts
+    # (volume-weighted), so 3-4 parts yield new branching/chain-like combinations.
+    # Note: slot_layout needs n_parts[1] slots for every kind that can be drawn.
+    n_parts: [2, 4]
+
+    # Primary dimensions — from precision-grasp size (4 cm) to power-grasp size (22 cm).
+    primary_length: [0.04, 0.22]     # total length (+X axis)
+    primary_cross:  [0.032, 0.070]   # cross-section (full width per axis) — at least 3 cm (min_thickness)
+
+    # Secondary dimensions are drawn as ratios relative to the primary. Sampling
+    # them independently from absolute ranges yields only "long rod + small bump"
+    # and monotonous shapes.
+    secondary_length_ratio: [0.35, 1.10]
+    # The cross-section ratio is also the relative arm thickness of L/T/cross
+    # shapes. A wider range produces more L/T shapes with one clearly thicker arm
+    # (so they do not look like two rods of equal thickness).
+    secondary_cross_ratio:  [0.55, 1.80]
+
+    # Archetype weights — this is where the variety in object appearance comes from.
+    #   rod      a single rod (no secondary)
+    #   hammer   thick head perpendicular at the end        → hammer
+    #   ell      perpendicular at the end, offset to a side → L shape
+    #   tee      perpendicular mid-way, protruding one side → T shape
+    #   cross    perpendicular through the centre           → cross
+    #   dumbbell coaxial lump at the end (thicker)          → dumbbell/mushroom
+    #   offset   parallel, shifted sideways                 → step/stack
+    shape_weights:
+      rod:      0.10
+      hammer:   0.22
+      ell:      0.14
+      tee:      0.16
+      cross:    0.14
+      dumbbell: 0.14
+      offset:   0.10
+
+    # Density — the reference paper uses primary 300–600 / secondary 300–2000.
+    # Lowered here so the hand can lift the objects, since min_thickness inflates
+    # the volume (dataset mesh objects use 100 kg/m³). The density ratio between
+    # the two components (up to ~12×) is what drives COM/inertia diversity.
+    primary_density:   [55.0, 200.0]
+    secondary_density: [70.0, 700.0]
+
+    # Attachment position (fraction of the primary half-length) and angular jitter.
+    attach_frac:     [0.72, 1.00]    # end-attached types (hammer/ell/dumbbell/offset)
+    mid_attach_frac: [0.0, 0.55]     # mid-attached types (tee/cross)
+    lateral_frac:    [0.35, 1.10]    # sideways shift of offset (relative to the cross-section radius)
+    tilt_deg:        [0.0, 30.0]     # deviation from the ideal angle (perpendicular/parallel)
+    cross_aniso:     [0.75, 1.35]    # box cross-section aspect ratio (1 = square; avoids overly flat boxes)
+
+    # Caps on the resulting size and mass (0 = off). Rather than narrowing the
+    # shape family, the result is clamped: first the whole geometry is shrunk;
+    # if still too heavy the density is lowered (the density ratio between the
+    # two components is preserved, so the COM bias survives). size_scale is
+    # multiplied in as well.
+    max_extent:       0.26           # longest bbox axis (m)
+    max_cross_extent: 0.14           # the other two axes (m)
+    max_mass:         0.5            # (kg)
+
+    # Minimum graspable thickness (m). Thin plates/wires are hard to pick up, so
+    # after the extent clamp each component's cross-section is inflated up to
+    # this value (lengths are untouched: a long rod stays a long rod, only the
+    # thinness disappears). Multiplied by size_scale; 0 = off.
+    min_thickness:    0.030          # 3 cm — no part is thinner than this
+
+    # Slot layout — fixed (geom type, order) shared by every variant.
+    # Needed because mjwarp geom_type cannot be overridden per world; each object
+    # enables only the slots of its own kinds and the rest are banished to group=4.
+    # Must cover every kind in primary_kinds ∪ secondary_kinds.
+    # n_parts[1] (=4) slots per kind — holds a 4-part object even if all parts share a kind.
+    slot_layout: ["box", "capsule", "box", "capsule",
+                  "box", "capsule", "box", "capsule"]
+
+    # object_source: mixed only — fraction of variants drawn from the mesh dataset.
+    # The rest is procedurally generated. 0.5 = half and half. The mesh candidate
+    # pool is obj_idxs (null → the whole active Dataset).
+    mesh_frac: 0.5
+
+    # Object sampling seed (null → differs per run). Set an integer for reproducibility.
+    seed: null
+
+  # BPS (object embedding)  
+  use_bps: True
+  use_bps_2x: False
+  bps_data_path: "bps_basis_points.npz" 
+  n_bps: 1024
+  bps_gamma: 25.0 
+
+  # Contact 
+  force_scale_for_state: 0.01 
+  force_scale_for_reward: 0.1 
+    
+  obj_name: 'top_watertight_tiny' # must be adjusted when multiple objects are used.
+  non_contact_obj_name: 'bottom_watertight_tiny' 
+
+  network_type: 'normal_tanh_mlp'
+
+Dataset: # Dataset config 
+  GraspXL:
+    use: True 
+    obj_folder_name: 'new_training_set'
+    obj_asset_dir_pre_fix: '../../asset/object'
+    obj_xml_path: 'obj_only/top_watertight_tiny/top_watertight_tiny_with_bottom_watertight_tiny_with_sensor.xml'
+    obj_name: 'top_watertight_tiny' # must be adjusted when multiple objects are used.
+    non_contact_obj_name: 'bottom_watertight_tiny'
+  RobustDexGrasp:
+    use: True
+    obj_folder_name: 'mixed_train'
+    obj_asset_dir_pre_fix: '../../asset/object'
+    obj_xml_path: 'obj_only/top_watertight_tiny/top_watertight_tiny_with_bottom_watertight_tiny_with_sensor.xml'
+    obj_name: 'top_watertight_tiny' # must be adjusted when multiple objects are used.
+    non_contact_obj_name: 'bottom_watertight_tiny'
+  ShapeNet:
+    use: False
+    obj_folder_name: large_scale_obj 
+    obj_asset_dir_pre_fix: '../../asset/object' 
+    obj_xml_path: 'obj_only/top_watertight_tiny/top_watertight_tiny_with_bottom_watertight_tiny_with_sensor.xml'
+    obj_name: 'top_watertight_tiny' # must be adjusted when multiple objects are used.
+    non_contact_obj_name: 'bottom_watertight_tiny' 
+  Objaverse:
+    use: False  
+    use_simple: False 
+    obj_folder_name: 'objaverse'
+    obj_asset_dir_pre_fix: '../../asset/object'
+    obj_xml_path: 'model_new.xml'
+    obj_name: '' # filled in by post-processing; not fixed. 
+    non_contact_obj_name: None
+
+  # Deprecated — not used. 
+  Objaverse_simple:
+    use: False 
+    use_simple: True 
+    obj_folder_name: 'objaverse_simple' # 'objaverse_simple' # 'objaverse'
+    obj_asset_dir_pre_fix: '../../asset/object'
+    obj_xml_path: 'model_float_soft_warp_decomposed.xml'
+    obj_name: '' # filled in by post-processing; not fixed. 
+    non_contact_obj_name: None
+
+Opt:
+  # iterations/ls: in contact-heavy grasping the solver typically converges in a
+  # few iterations (p99 ≈ 10) and hits the cap in ~0.01% of steps. Headroom in
+  # the cap is free (converged world lanes are masked), so keep 20/15; lowering
+  # them only truncates unconverged solves at the moment of contact.
+  iterations: 20
+  ls_iterations: 15
+  ccd_iterations: 15
+  ccd_tolerance: 1e-6
+  tolerance: 1e-8
+  impratio: 5.0
+  gravity: [0, 0, -9.81]
+  cone: 1 #{0 : pyramidal, 1: elliptic}
+  solver: 2 # {1: CG, 2: Newton}
+  contact_sensor_maxmatch: 96   # injected as an mjwarp custom numeric (default 64; 70+ matches observed at grasp → headroom)
+
+# ── Collision-hull vertex cap (reduces convex narrowphase cost) ─────────
+# Upper bound on the convex-hull vertex count of every mesh at compile time.
+# Visual rendering keeps the original — the hull is collision-only. Hand
+# colliders built from raw visual meshes (hulls of several hundred verts)
+# dominated the mjwarp GJK cost (full hull scan per iteration): a 64 cap gave
+# ~+30% SPS on contact-heavy grasping with no change in solver iterations or
+# contact-force distribution. Object collision pieces have hulls of ~45 verts,
+# so the 64 cap does not affect them.
+# 0 / null → off (original hulls). The env var GRIT_MAXHULLVERT takes precedence.
+maxhullvert: 64
+
+nworld: 16
+# y translation of the follower hand + object in leader-follower scenes (used only
+# when env_type=leader_follower). Object-interaction tasks need ≥1.0 because of the
+# wrist init radius (0.2–0.35 m) — their yaml overrides it.
+lf_y_offset: 0.5
+# ── mjwarp contact/constraint buffers ─────────────────────────────────
+# nconmax = con_per_env (per-world average; a heterogeneous pool shared by all worlds),
+# njmax   = con_per_env × njmax_muiltiply (per-world **hard cap** — excess constraints
+# are silently dropped). 50 saturates at the moment of grasp (hand ~48 geoms × object
+# + self + table, and the elliptic cone adds several constraint rows per contact), so
+# contacts get dropped, and a dropped contact means the finger passes straight
+# through the mesh (penetration) in that frame.
+# Raised to 150 (GPU cost at nworld 4096: about +0.67 GB — negligible).
+con_per_env: 150
+njmax_muiltiply: 8
+n_steps: 8
+n_sub_env: 2
+action_repeat: 1
+
+# Candidate **pool** of object indices for variant materialisation.
+#   - null  → uniform random sample of size `n_sub_env` from the full
+#             active-dataset obj_xml_path_lst (default, legacy).
+#   - list  → restrict sampling to these indices. `n_sub_env` (above)
+#             is still the authoritative variant count; the pool only
+#             constrains WHICH objects can be picked, not HOW MANY:
+#               * len(pool) <  n_sub_env → AssertionError at init
+#                 (not enough candidates for the requested variant count).
+#               * len(pool) == n_sub_env → use the whole pool verbatim
+#                 (deterministic).
+#               * len(pool) >  n_sub_env → random subsample of size
+#                 n_sub_env from the pool (without replacement).
+# Out-of-range indices raise ValueError at orchestrator init; the valid
+# range depends on which Dataset.<name>.use flags are True.
+# Examples:
+#   obj_idxs: null           # legacy random
+#   obj_idxs: [7]            # always object 7  (must have n_sub_env: 1)
+#   obj_idxs: [0, 5, 10, 23] # pool of 4; n_sub_env decides how many used
+obj_idxs: null
+
+# ── Fixed evaluation object set ───────────────────────────────────────
+# Objects to EVALUATE on (indices into the active Dataset, same space as
+# obj_idxs). When set, a dedicated pinned eval env is built so eval metrics
+# stay comparable across training even while ``resample_objects_every`` keeps
+# swapping the TRAINING objects. ``null`` → eval falls back to the current
+# training objects (legacy behaviour). n_sub_env for the eval env is forced to
+# len(eval_obj_idxs) (all listed objects used).
+#   eval_obj_idxs: null            # eval on whatever the training env holds
+#   eval_obj_idxs: [0, 5, 10, 23]  # always eval on these 4 objects
+eval_obj_idxs: null
+# Parallel world count for the eval env (kept small to bound the extra GPU
+# memory of a 2nd resident env). null → min(nworld, 256).
+eval_nworld: null
+
+# MuJoCo CPU solver stack arena size. Written verbatim into the <size memory="..."/>
+# directive; every MjModel instance reserves this much CPU RAM. Unit suffixes:
+#   "32"  =  32 bytes          "32K" = 32 KB
+#   "32M" =  32 MB (≈33.5 MB)  "32G" = 32 GB
+#
+# In multi-object scenarios (n_obj ≥ 2) the hand × N objects × decomposed-mesh
+# contact candidates grow polynomially and nefc / ncon explode, which can overflow
+# the stack inside mj_forward ("mj_stackAlloc: out of memory") — so keep it generous.
+# For n_obj=1 workflows (training) the RAM impact is only a few MB per instance.
+# null / empty string → directive omitted (MuJoCo auto-estimates).
+mjcf_arena_memory: "256M"
+
+ctrl_dt: 0.04 # 0.02
+sim_dt: 0.005 # 0.005
+
+# ── Finger position-servo gain override ───────────────────────────────────
+# Retune finger actuators on the compiled model at build time. Persisted in the
+# run's config snapshot → REAPPLIED identically at eval/deploy (build_inference_env).
+# null = keep factory XML gains. Env vars GRIT_FINGER_KP/KV/DAMPING_SCALE/KV_MODE
+# override these for quick experiments (not persisted). See
+# grit.util.hand_utils.apply_finger_gain_override + docs/experiments/lf_nan_and_robotis_gain.md.
+#   ⚠ Objectless tracking only — raising kp on grasping inflates contact force.
+finger_gain:
+  kp:            null   # proportional gain (position stiffness); null = factory
+  kv:            null   # explicit velocity gain (abs); preferred = empirical critical
+  damping_scale: null   # ×finger joint damping; null = unchanged
+  kv_mode:       critical  # when kv null: critical(2√(kp·arm)) | scale | fixed
+  # Actuator force limit ±N (Nm). **Key to reducing penetration**: the factory ±40
+  # is tens of times a real finger (0.5–2 Nm), so once the setpoint moves inside
+  # the object the contact stiffness cannot hold it back (probe: ~20 mm squeeze
+  # penetration, identical on CPU and warp → a force problem, not a solver one).
+  # null → use the per-hand yaml ``config/<hand>/grit_<type>.yaml: finger_gain.forcerange``
+  # (approximations of the real hardware, roughly ±1.5 to ±5 Nm depending on the hand).
+  # A non-null value here (or in a run snapshot) takes precedence over the per-hand
+  # yaml — for reproducing older runs.
+  # env: GRIT_FINGER_FORCERANGE has the highest priority.
+  forcerange:    null
+
+# ⚠️ LEGACY — NOT used by the current training/orchestrator pipeline. Object
+# selection is driven SOLELY by `obj_idxs` (plural, above). This scalar key is
+# kept only as a "did-you-mean-obj_idxs" guard target: passing `obj_idx=[...]`
+# (a list) raises a ValueError at Env_Orchestrator init. To restrict objects use
+# `obj_idxs=[...]`.
+obj_idx: 3 # sodacan (legacy scalar; unused by current pipeline)
+
+
+# ── Reward normalization (default for all tasks; grit/training/reward_normalizer.py) ──
+# vf_loss is an MSE on the raw return, so when the reward scale is large or changes
+# with the curriculum the critic gradient dominates grad_norm (pre-clip grad_norm ≫
+# max_grad_norm becomes chronic). With enabled=true the rollout rewards are divided
+# by running statistics before being stored in the buffer → critic/GAE see an O(1) scale.
+# Eval metrics, reward_term logging and handler.metrics all stay RAW (comparable).
+# The normalizer state (running mean/var) is saved in the ckpt and restored on resume.
+# wandb: train/<tag>/reward_mean_raw (raw scale) + reward_norm_scale (current denominator).
+training:
+  reward_norm:
+    enabled: false      # master switch
+    mode:    return     # return: divide only by the running std of the discounted return (sign-preserving; gym VecNormalize style, recommended)
+                        # reward: standardize the reward itself with running mean/var
+    center:  false      # reward mode only — subtract the running mean (caution: changes the sign semantics)
+    clip:    10.0       # |r| clip after normalization (0/null = off)
+    eps:     1.0e-8     # variance floor (sqrt(var+eps))
+    gamma:   null       # discount for return mode; null → inherits training.gamma
+
+handler:
+  curriculum:
+    # ── Generic reward-knob curriculum (shared by all RL envs, rl_env_base) ──
+    # null = off. {knob: [final, start_step, end_step(, log)]} — knob is a key
+    # name from the handler.reward_* groups in this file. Interpolates base (yaml
+    # value) → final; end<=0 → total_new_steps; 'log' = geometric interpolation
+    # (for K_*-style exponential rates).
+    # start_step=-1 → no step schedule (gate-only knob when reward_gate is set below).
+    # Example:
+    # reward:
+    #   W_MIMIC:        [0.5, 10_000_000, 40_000_000]
+    #   K_FINGER:       [50.0, 20_000_000, 0, log]
+    #   W_CONTACT_RATIO: [1.0, 0, 30_000_000]
+    # ── Global curriculum start (common freeze point for all reward knobs + gate) ──
+    # Before this global control step the whole reward curriculum is frozen at the
+    # base (yaml) weights: the effective per-knob start = max(knob_start,
+    # reward_start_step), and the success gate does not accumulate progress before
+    # this step even when evals pass (restored progress on resume is not applied
+    # either). 0 = off. Example: 4e+7 → focus on learning the grasp for the first
+    # 40M steps, then start the penalty ramps / gate.
+    reward_start_step: 0
+    reward_gate:
+      metric:            success_rate_lift
+      threshold:         0.75
+      progress_per_eval: 0.05
+      max_progress:      1.0
+
+# ── Output folder naming (output/checkpoints/<...>) ───────────────────
+# The default SAVE_DIR name is ``{hand}_{task}_{env}``, so different experiments
+# with the same hand/task/env (different n_sub_env / nworld / object pool, ...)
+# land in the same folder. The keys below append a suffix to separate them.
+#   include_sim_in_name: True → appends ``_nse{n_sub_env}_nw{nworld}``
+#   run_tag: <str>            → appends ``_{run_tag}`` (CLI override recommended:
+#                               --overrides output.run_tag=for_approach_test)
+# Example with both: tesollo_grasping_object_grasping_w_bps_nse30_nw4096_for_approach_test
+# At training start, train.py prints the matching ``--name-suffix`` value for evaluation.
+# (Default OFF → legacy folder rule; enabling it creates a new folder = mind resume compatibility)
+output:
+  include_sim_in_name: False
+  run_tag: null

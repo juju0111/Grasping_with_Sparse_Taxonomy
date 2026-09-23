@@ -1,0 +1,131 @@
+# ══════════════════════════════════════════════════════════════════════
+# grasping_policy_async_best_w_ground_force.yaml
+#   = grasping_policy_async_best.yaml + **object↔table collision penalty**
+#
+# Inherits best.yaml and carries **only the delta** (no value duplication —
+# when best is updated this file follows automatically). best.yaml itself is
+# the reference baseline, so it keeps W_OBJ_TABLE_FORCE: 0.0 (off); only this
+# variant turns it on.
+#
+# ── Why ─────────────────────────────────────────────────────────────────
+#   In the converged baseline the object presses on the table with a force
+#   that is tens of times its own weight (obj_ground_force ≫ obj_weight_force),
+#   yet this was not reflected in the reward at all. The existing
+#   W_TABLE_CONTACT / W_TABLE_IMPULSE terms are **hand**↔table only, and
+#   obj_ground_force was consumed only by the obs and by done(12)
+#   (DONE_OBJ_GROUND_IMPULSE defaults to 1e9 = effectively off).
+#
+# ── What changes ────────────────────────────────────────────────────────
+#   [P1] W_OBJ_TABLE_FORCE 0.0 → on (via curriculum below)
+#        r_obj_table = -W · max(0, obj_ground_force - (FREE_K·mg_eff + ALPHA))
+#        An axis **separate** from hand↔table. Being a penalty it is added
+#        ungated in the mixer — not suppressed by the multiplicative gate of
+#        the contact bonuses.
+#   [P2] OBJ_TABLE_FREE_K — the resting load of an object sitting on the table
+#        (≈mg) is not penalized. Before the grasp the object is legitimately on
+#        the table; penalizing that gives a constant penalty and the policy
+#        tries to push the object away. Only the excess (pressing/slamming) is
+#        penalized. If grasp success drops, the first knob to reach for is
+#        **raising this value**, not lowering W (e.g. 3.0 — up to 3× the weight
+#        counts as legitimate grasp pressure).
+#   [P3] W_OBJ_TOUCH 0.25 → 0.10 — weaker penalty on the grasp force the hand
+#        applies to the object (gentle).
+#   [P4] λ target for W_OBJ_TOUCH 1.2 → 2.0 — **must be paired** with [P3].
+#        Lowering only the base weight is ineffective because λ pushes it back
+#        up. In this codebase the effective penalty strength is set by λ, not
+#        by W_base.
+#
+# ── Metrics to watch ────────────────────────────────────────────────────
+#   obj_ground_force (should fall) / r_obj_table_pen (new term) /
+#   success_rate_lift (must not fall with it) / obj_touch_force (may rise)
+# ══════════════════════════════════════════════════════════════════════
+defaults:
+  - grasping_policy_async_best
+  - _self_
+
+# [P9] Total training budget 2e+8 → 1.5e+8. n_evals stays at 250 —
+#   more gate-advance opportunities per eval, so the curriculum (=max(step, gate)) opens more readily.
+training:
+  total_new_steps: 1.5e+8
+
+handler:
+  reward_penalty:
+    # [P1] Object↔table collision. **Starts at base 0 and is switched on by the
+    #      curriculum** (curriculum.reward.W_OBJ_TABLE_FORCE below interpolates it up).
+    W_OBJ_TABLE_FORCE: 0.0
+    # [P2] Penalty-free allowance **0** — the goal is "obj_ground_force converges
+    #   to 0", so no free band. With FREE_K=1.0, penalized = max(0, F − mg) has
+    #   **no gradient for F < mg**, so the force cannot be driven below that.
+    #   In practice the per-step F is well below mg, which made the term
+    #   effectively void. raw_table_contact_w, which λ drives to 0, has no free
+    #   allowance either — this matches that form.
+    OBJ_TABLE_FREE_K: 0.0
+    OBJ_TABLE_FREE_ALPHA: 0.0
+    # [P3] gentle base set to **0**. This knob is λ-managed (W = base + λ), so
+    #      putting it in curriculum.reward would make it and λ overwrite each
+    #      other every iteration (see the lagrangian handler). Instead
+    #      base=0 + λ warmup yields "0 at first, on later":
+    #        · λ=0 until LAG_WARMUP_STEPS (2e7)  → penalty exactly 0
+    #        · afterwards λ rises only while obj_touch_force exceeds the target (2.0)
+    #      = no gentle pressure until the grasp force actually becomes excessive.
+    W_OBJ_TOUCH: 0.0            # best: 0.25
+  reward_tracking:
+    # [P6] mimic pressure **base ≈ 0** — the curriculum below ramps it up to the best values.
+    W_MIMIC: 0.01                # best: 0.1
+    W_MIMIC_NAIVE: 0.01          # best: 0.05
+  retry:
+    # [P7] Worlds that **never even touched** the object terminate without a retry.
+    #   Retry exists to rescue "grasped, then dropped" cases; granting it to a
+    #   world with no contact experience merely repeats a failed approach and
+    #   burns episode budget — terminating early via hold_far and starting the
+    #   next episode is more sample-efficient. Worlds with contact experience
+    #   still extend the episode through retry as before.
+    #   Note: automatically disabled in eval (training only) — eval success
+    #     rates are measured under the same retry convention as before this knob.
+    RETRY_REQUIRE_CONTACT: true
+
+  reward_lagrangian:
+    LAG_CONSTRAINTS:
+      W_OBJ_TOUCH:              # [P4] relaxed gentle λ constraint (best: target 1.2)
+        - obj_touch_force
+        - 2.0
+        - 4.0
+  curriculum:
+    # [P8] reward_gate threshold 0.8 → 0.7.
+    #   Curriculum progress = max(step schedule, gate). The gate advances each
+    #   time success_rate_lift exceeds the threshold; a hand that oscillates
+    #   just below 0.8 never opens the curriculum → contact rewards stay at
+    #   base → lift never exceeds 0.8: a self-reinforcing loop. Lowering the
+    #   threshold to 0.7 breaks it.
+    #   Note: margin_band 0.15 is unchanged — just above the threshold the step
+    #     is P-controlled toward 0, so with 0.7 the full rate is reached from lift 0.85.
+    reward_gate:
+      threshold: 0.7
+    reward:
+      # [P5] Object↔table penalty curriculum: 0 → 20.0.
+      #   Goal: obj_ground_force converges to 0 late in training (same pattern
+      #   as raw_table_contact_w). That needs two things together:
+      #     (a) no penalty-free allowance (OBJ_TABLE_FREE_K = 0) — with
+      #         FREE_K=1.0, penalized = max(0, F − mg) has no gradient for
+      #         F < mg, so the force cannot be driven below that.
+      #     (b) a sufficiently large weight — a fixed W=5 with FREE_K=1.0 only
+      #         halved obj_ground_force; driving it to 0 needs more pressure.
+      #   Onset 6e7 — let the policy reach its success ceiling after lift-off
+      #   first, then tighten with the regularizer. Full 20.0 at 1.2e8 → the
+      #   last 3e+7 steps train at full strength.
+      #   Note: if this were λ-managed (LAG_CONSTRAINTS) it would overwrite the
+      #     curriculum every iteration, so use only one of the two. Here: curriculum.
+      W_OBJ_TABLE_FORCE: [20.0, 6.0e+7, 1.2e+8]
+      # [P6] mimic qpos-error pressure ramp: 0 → best values.
+      #   Why — comparing against stalled runs, the divergence was a much lower
+      #   r_approach while r_mimic was actually higher in the stalled run: the
+      #   policy escapes into "holding the taxonomy pose" instead of
+      #   "approaching the object". Tightening the qpos error from the start
+      #   makes that local optimum more attractive, so tighten only after
+      #   approach and contact are established.
+      #   Note: the gate factor r_mimic = exp(-K_MIMIC·err) **does not use W_MIMIC**,
+      #     so starting W_MIMIC at 0 leaves ineq_coeff (the contact-bonus gate)
+      #     unchanged — a safe ramp. Conversely K_MIMIC / MIMIC_*_DEADZONE narrow
+      #     the gate directly, so they are left alone.
+      W_MIMIC:       [0.1,  4.0e+7, 1.2e+8]
+      W_MIMIC_NAIVE: [0.05, 4.0e+7, 1.2e+8]

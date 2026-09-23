@@ -1,0 +1,409 @@
+<mujoco model="ffw_sh5_rh">
+  <compiler angle="radian" autolimits="true"/>
+
+  <option integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <asset>
+    <material name="black" rgba="0.2 0.2 0.2 1"/>
+    <material name="white" rgba="1 1 1 1"/>
+    <material name="grey" rgba="0.7 0.7 0.7 1"/>
+    
+    <material name="thumb_1" rgba="0.231373 0.580392 0.705882 1"/>
+    <material name="thumb_2" rgba="0.231373 0.610392 0.705882 1"/>
+    <material name="thumb_3" rgba="0.231373 0.650392 0.705882 1"/>
+    <material name="thumb_4" rgba="0.231373 0.680392 0.705882 1"/> 
+
+    <material name="index_1" rgba="0.615686 0.701765 0.729412 1"/>
+    <material name="index_2" rgba="0.615686 0.751765 0.729412 1"/>
+    <material name="index_3" rgba="0.615686 0.791765 0.729412 1"/>
+    <material name="index_4" rgba="0.615686 0.811765 0.729412 1"/>
+
+    <material name="middle_1" rgba="0.513726 0.737255 0.407843 1"/>
+    <material name="middle_2" rgba="0.613726 0.737255 0.407843 1"/>
+    <material name="middle_3" rgba="0.713726 0.737255 0.407843 1"/>
+    <material name="middle_4" rgba="0.763726 0.737255 0.407843 1"/>
+
+    <material name="ring_1" rgba="0.972549 0.529412 0.00392157 1"/>
+    <material name="ring_2" rgba="0.972549 0.729412 0.00392157 1"/>
+    <material name="ring_3" rgba="0.972549 0.829412 0.00392157 1"/>
+    <material name="ring_4" rgba="0.972549 0.889412 0.00392157 1"/>
+
+    <material name="little_1" rgba="0.7 0.74902 0.613725 1"/>
+    <material name="little_2" rgba="0.7 0.79902 0.6313725 1"/>
+    <material name="little_3" rgba="0.7 0.74902 0.663725 1"/>
+    <material name="little_4" rgba="0.7 0.74902 0.693725 1"/>
+
+    <!-- HX5-D20 5-finger hand meshes (right) -->
+    <mesh name="hx5_r_base" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_base_unit.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_thumb_mcp" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_thumb_mcp.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_thumb_mcp2" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_thumb_mcp2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_thumb_ip" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_thumb_ip.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_thumb_tip" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_thumb_tip.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_finger_mcp" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_finger_mcp.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_finger_pip" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_finger_pip.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_finger_dip" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_finger_dip.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="hx5_r_finger_tip" file="mesh/hx5_d20/hx5_d20_right/hx5_d20_finger_tip.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+
+  <default>
+    <!-- HX5-D20 5-finger hand -->
+    <default class="finger">
+      <joint frictionloss="0.01" armature="0.05" damping="0.0"/>
+      <position kp="30" dampratio="1" forcerange="-20.0 20.0"/>
+      <!-- Left Thumb joints -->
+      <default class="thumb_l_cmc">
+        <joint axis="1 0 0" range="-1.5708 1.5708"/>
+      </default>
+      <default class="thumb_l_mcp_yaw">
+        <joint axis="0 0 1" range="0 3.1416"/>
+      </default>
+      <default class="thumb_l_mcp_pitch">
+        <joint axis="1 0 0" range="-1.5708 0"/>
+      </default>
+      <default class="thumb_l_ip">
+        <joint axis="1 0 0" range="-1.5708 0"/>
+      </default>
+      <!-- Right Thumb joints -->
+      <default class="thumb_r_cmc">
+        <joint axis="1 0 0" range="-1.5708 1.5708"/>
+      </default>
+      <default class="thumb_r_mcp_yaw">
+        <joint axis="0 0 1" range="-3.1416 0"/>
+      </default>
+      <default class="thumb_r_mcp_pitch">
+        <joint axis="1 0 0" range="-0.7 1.5708"/>
+      </default>
+      <default class="thumb_r_ip">
+        <joint axis="1 0 0" range="-0.7 1.5708"/>
+      </default>
+      <!-- Finger MCP Roll (spread) -->
+      <default class="finger_mcp">
+        <joint axis="1 0 0" range="-0.6109 0.6109"/>
+      </default>
+      <!-- Finger MCP Pitch (flex) -->
+      <default class="finger_pip">
+        <joint axis="0 1 0" range="0 2.0071"/>
+      </default>
+      <!-- Finger PIP -->
+      <default class="finger_dip">
+        <joint axis="0 1 0" range="0 1.5708"/>
+      </default>
+      <!-- Finger DIP -->
+      <default class="finger_tip">
+        <joint axis="0 1 0" range="0 1.5708"/>
+      </default>
+    </default>
+    <!-- Visual / Collision -->
+    <default class="visual">
+      <geom type="mesh" contype="0" conaffinity="0" density="0" group="2"/>
+    </default>
+    <default class="collision">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <body name="sh5_rh:mocap" mocap="true" pos="0. 0. 1.0">        
+      <geom type="box" size=".01 .01 .01" contype="0" conaffinity="0"/>        
+      <site name="sh5_rh_mocap" type="box" size=".01 .01 .01" />    
+    </body>
+
+    <!-- Right hand (HX5-D20) -->
+    <body name="hx5_r_base" pos="0 0 1.0" quat="1 0 0 0">
+      <inertial pos="-0.00259546 0.00179263 0.0629577" mass="0.301852" diaginertia="0.000542413 0.000389333 0.000210116"/>
+      <geom type="mesh" mesh="hx5_r_base" material="black" class="visual"/>
+      <geom type="mesh" mesh="hx5_r_base" class="collision"/>
+      <joint name="sh5_rh_free_joint" type="free" damping="3.0" armature="0.25"/>       
+
+      <site name="sh5_rh_0_touch" type="box" pos="0.015 -0.002 0.074" size="0.038 0.061 0.09" rgba="0 1 0 0.0"/>
+
+      <body name="sh5_r_arm_part" pos="0 0 -0.1" quat="1 0 0 0 ">      
+        <geom type="box" size="0.05 0.07 0.08" contype="1" conaffinity="1" rgba="0 0 0 0.5"/>      
+        <site name="sh5_r_arm_part_touch" type="box" pos="0.0 -0.006 0.0" size="0.049 0.085 0.09" rgba="0 1 0 0."/>
+  
+      </body>
+
+      <!-- Thumb (4 joints) -->
+      <body name="finger_r_link1_1" pos="-0.0125 0.03493 0.04475">
+        <inertial pos="0.0238075 0.00131524 0.000460355" mass="0.0408685" diaginertia="2.88193e-06 9.43334e-06 9.65126e-06"/>
+        <joint name="finger_rh_joint1_1" class="thumb_r_cmc"/>
+        <geom type="mesh" mesh="hx5_r_thumb_mcp" material="thumb_1" class="visual"/>
+        <geom type="mesh" mesh="hx5_r_thumb_mcp" class="collision"/>
+        <body name="finger_r_link1_2" pos="0.039 0 0">
+          <inertial pos="-0.000356679 0.0139993 0.000359207" mass="0.0117606" diaginertia="1.30235e-06 1.05564e-06 1.30247e-06"/>
+          <joint name="finger_rh_joint1_2" class="thumb_r_mcp_yaw"/>
+          <geom type="mesh" mesh="hx5_r_thumb_mcp2" material="thumb_2" class="visual"/>
+          <geom type="mesh" mesh="hx5_r_thumb_mcp2" class="collision"/>
+          <site name="sh5_rh_1_touch" type="box" pos="-0.001 0.014 0.009" size="0.014 0.026 0.018" rgba="0 1 0 0."/>
+    
+          <body name="finger_r_link1_3" pos="0 0.028 0">
+            <inertial pos="-0.000101462 0.0113435 4.08056e-06" mass="0.034690" diaginertia="5.03702e-06 2.25807e-06 5.40298e-06"/>
+            <joint name="finger_rh_joint1_3" class="thumb_r_mcp_pitch"/>
+            <geom type="mesh" mesh="hx5_r_thumb_ip" material="thumb_3" class="visual"/>
+            <geom type="mesh" mesh="hx5_r_thumb_ip" class="collision"/>
+            <site name="sh5_rh_2_touch" type="box" pos="0. 0.016 0.009" size="0.013 0.025 0.017" rgba="0 1 0 0."/>
+      
+            <body name="finger_r_link1_4" pos="0 0.0355 0">
+              <inertial pos="6.66050e-05 0.0168245 0.000223985" mass="0.043875" diaginertia="1.11607e-05 2.80794e-06 1.13431e-05"/>
+              <joint name="finger_rh_joint1_4" class="thumb_r_ip"/>
+              <geom type="mesh" mesh="hx5_r_thumb_tip" material="thumb_4" class="visual"/>
+              <geom type="mesh" mesh="hx5_r_thumb_tip" class="collision"/>
+              <site name="sh5_rh_3_touch" type="box" pos="0. 0.043 0.012" size="0.014 0.052 0.015" rgba="0 1 0 0."/>
+        
+              <body name="sh5_rh_thumb_end" pos="0.    0.053 0.008"/>
+
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Index finger (4 joints) -->
+      <body name="finger_r_link2_1" pos="-0.0015 0.03608 0.09575">
+        <inertial pos="0.00519340 -1.81631e-05 0.0211155" mass="0.0388044" diaginertia="3.52499e-06 5.79216e-06 4.71268e-06"/>
+        <joint name="finger_rh_joint2_1" class="finger_mcp"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" material="index_1" class="visual"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" class="collision"/>
+        <body name="finger_r_link2_2" pos="0.0165 0 0.0235">
+          <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+          <joint name="finger_rh_joint2_2" class="finger_pip"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" material="index_2" class="visual"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" class="collision"/>
+          <site name="sh5_rh_4_touch" type="box" pos="0.009 0.0 0.018" size="0.014 0.016 0.023" rgba="0 1 0 0."/>
+    
+          <body name="finger_r_link2_3" pos="0 0 0.0355">
+            <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+            <joint name="finger_rh_joint2_3" class="finger_dip"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" material="index_3" class="visual"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" class="collision"/>
+            <site name="sh5_rh_5_touch" type="box" pos="0.009 -0.0 0.023" size="0.016 0.014 0.022" rgba="0 1 0 0."/>
+      
+            <body name="finger_r_link2_4" pos="0 0 0.0355">
+              <inertial pos="0.000710251 0.000472384 0.0180986" mass="0.013637" diaginertia="2.23243e-06 2.01881e-06 1.07866e-06"/>
+              <joint name="finger_rh_joint2_4" class="finger_tip"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" material="index_4" class="visual"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" class="collision"/>
+              <site name="sh5_rh_6_touch" type="box" pos="0.012 -0.0 0.024" size="0.016 0.013 0.015" rgba="0 1 0 0."/>
+        
+              <body name="sh5_rh_index_end" pos="0.01  0.    0.036"/>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Middle finger (4 joints) -->
+      <body name="finger_r_link3_1" pos="-0.0015 0.00908 0.10353">
+        <inertial pos="0.00519340 -1.81631e-05 0.0211155" mass="0.0388044" diaginertia="3.52499e-06 5.79216e-06 4.71268e-06"/>
+        <joint name="finger_rh_joint3_1" class="finger_mcp"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" material="middle_1" class="visual"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" class="collision"/>
+        <body name="finger_r_link3_2" pos="0.0165 0 0.0235">
+          <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+          <joint name="finger_rh_joint3_2" class="finger_pip"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" material="middle_2" class="visual"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" class="collision"/>
+          <site name="sh5_rh_7_touch" type="box" pos="0.009 -0.0 0.019" size="0.015 0.013 0.025" rgba="0 1 0 0."/>
+    
+          <body name="finger_r_link3_3" pos="0 0 0.0355">
+            <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+            <joint name="finger_rh_joint3_3" class="finger_dip"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" material="middle_3" class="visual"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" class="collision"/>
+            <site name="sh5_rh_8_touch" type="box" pos="0.009 -0.0 0.022" size="0.017 0.014 0.025" rgba="0 1 0 0."/>
+      
+            <body name="finger_r_link3_4" pos="0 0 0.0355">
+              <inertial pos="0.000710251 0.000472384 0.0180986" mass="0.013637" diaginertia="2.23243e-06 2.01881e-06 1.07866e-06"/>
+              <joint name="finger_rh_joint3_4" class="finger_tip"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" material="middle_4" class="visual"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" class="collision"/>
+              <site name="sh5_rh_9_touch" type="box" pos="0.012 -0.0 0.024" size="0.015 0.013 0.016" rgba="0 1 0 0."/>
+        
+
+              <body name="sh5_rh_middle_end" pos="0.01  0.    0.036"/>
+
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Ring finger (4 joints) -->
+      <body name="finger_r_link4_1" pos="-0.0015 -0.01792 0.09775">
+        <inertial pos="0.00519340 -1.81631e-05 0.0211155" mass="0.0388044" diaginertia="3.52499e-06 5.79216e-06 4.71268e-06"/>
+        <joint name="finger_rh_joint4_1" class="finger_mcp"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" material="ring_1" class="visual"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" class="collision"/>
+        <body name="finger_r_link4_2" pos="0.0165 0 0.0235">
+          <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+          <joint name="finger_rh_joint4_2" class="finger_pip"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" material="ring_2" class="visual"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" class="collision"/>
+          <site name="sh5_rh_10_touch" type="box" pos="0.009 -0.0 0.02" size="0.017 0.013 0.025" rgba="0 1 0 0."/>
+    
+          <body name="finger_r_link4_3" pos="0 0 0.0355">
+            <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+            <joint name="finger_rh_joint4_3" class="finger_dip"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" material="ring_3" class="visual"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" class="collision"/>
+            <site name="sh5_rh_11_touch" type="box" pos="0.009 -0.0 0.022" size="0.015 0.013 0.024" rgba="0 1 0 0."/>
+      
+            <body name="finger_r_link4_4" pos="0 0 0.0355">
+              <inertial pos="0.000710251 0.000472384 0.0180986" mass="0.013637" diaginertia="2.23243e-06 2.01881e-06 1.07866e-06"/>
+              <joint name="finger_rh_joint4_4" class="finger_tip"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" material="ring_4" class="visual"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" class="collision"/>
+              <site name="sh5_rh_12_touch" type="box" pos="0.012 -0.0 0.024" size="0.015 0.013 0.015" rgba="0 1 0 0."/>
+        
+
+              <body name="sh5_rh_ring_end" pos="0.01  0.    0.036"/>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Pinky finger (4 joints) -->
+      <body name="finger_r_link5_1" pos="-0.0015 -0.04492 0.07875">
+        <inertial pos="0.00519340 -1.81631e-05 0.0211155" mass="0.0388044" diaginertia="3.52499e-06 5.79216e-06 4.71268e-06"/>
+        <joint name="finger_rh_joint5_1" class="finger_mcp"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" material="little_1" class="visual"/>
+        <geom type="mesh" mesh="hx5_r_finger_mcp" class="collision"/>
+        <body name="finger_r_link5_2" pos="0.0165 0 0.0235">
+          <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+          <joint name="finger_rh_joint5_2" class="finger_pip"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" material="little_2" class="visual"/>
+          <geom type="mesh" mesh="hx5_r_finger_pip" class="collision"/>
+          <site name="sh5_rh_13_touch" type="box" pos="0.009 -0.0 0.021" size="0.016 0.013 0.029" rgba="0 1 0 0."/>
+    
+          <body name="finger_r_link5_3" pos="0 0 0.0355">
+            <inertial pos="4.08056e-06 0.000101462 0.0241565" mass="0.034690" diaginertia="5.40298e-06 5.03702e-06 2.25807e-06"/>
+            <joint name="finger_rh_joint5_3" class="finger_dip"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" material="little_3" class="visual"/>
+            <geom type="mesh" mesh="hx5_r_finger_dip" class="collision"/>
+            <site name="sh5_rh_14_touch" type="box" pos="0.009 -0.0 0.022" size="0.016 0.014 0.026" rgba="0 1 0 0."/>
+      
+            <body name="finger_r_link5_4" pos="0 0 0.0355">
+              <inertial pos="0.000710251 0.000472384 0.0180986" mass="0.013637" diaginertia="2.23243e-06 2.01881e-06 1.07866e-06"/>
+              <joint name="finger_rh_joint5_4" class="finger_tip"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" material="little_4" class="visual"/>
+              <geom type="mesh" mesh="hx5_r_finger_tip" class="collision"/>
+              <site name="sh5_rh_15_touch" type="box" pos="0.012 -0.0 0.024" size="0.015 0.013 0.017" rgba="0 1 0 0."/>
+        
+              <body name="sh5_rh_pinky_end" pos="0.011 0.    0.035"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- Right hand fingers -->
+    <position class="thumb_r_cmc" name="finger_rh_joint1_1" joint="finger_rh_joint1_1" inheritrange="1"/>
+    <position class="thumb_r_mcp_yaw" name="finger_rh_joint1_2" joint="finger_rh_joint1_2" inheritrange="1"/>
+    <position class="thumb_r_mcp_pitch" name="finger_rh_joint1_3" joint="finger_rh_joint1_3" inheritrange="1"/>
+    <position class="thumb_r_ip" name="finger_rh_joint1_4" joint="finger_rh_joint1_4" inheritrange="1"/>
+    <position class="finger_mcp" name="finger_rh_joint2_1" joint="finger_rh_joint2_1" inheritrange="1"/>
+    <position class="finger_pip" name="finger_rh_joint2_2" joint="finger_rh_joint2_2" inheritrange="1"/>
+    <position class="finger_dip" name="finger_rh_joint2_3" joint="finger_rh_joint2_3" inheritrange="1"/>
+    <position class="finger_tip" name="finger_rh_joint2_4" joint="finger_rh_joint2_4" inheritrange="1"/>
+    <position class="finger_mcp" name="finger_rh_joint3_1" joint="finger_rh_joint3_1" inheritrange="1"/>
+    <position class="finger_pip" name="finger_rh_joint3_2" joint="finger_rh_joint3_2" inheritrange="1"/>
+    <position class="finger_dip" name="finger_rh_joint3_3" joint="finger_rh_joint3_3" inheritrange="1"/>
+    <position class="finger_tip" name="finger_rh_joint3_4" joint="finger_rh_joint3_4" inheritrange="1"/>
+    <position class="finger_mcp" name="finger_rh_joint4_1" joint="finger_rh_joint4_1" inheritrange="1"/>
+    <position class="finger_pip" name="finger_rh_joint4_2" joint="finger_rh_joint4_2" inheritrange="1"/>
+    <position class="finger_dip" name="finger_rh_joint4_3" joint="finger_rh_joint4_3" inheritrange="1"/>
+    <position class="finger_tip" name="finger_rh_joint4_4" joint="finger_rh_joint4_4" inheritrange="1"/>
+    <position class="finger_mcp" name="finger_rh_joint5_1" joint="finger_rh_joint5_1" inheritrange="1"/>
+    <position class="finger_pip" name="finger_rh_joint5_2" joint="finger_rh_joint5_2" inheritrange="1"/>
+    <position class="finger_dip" name="finger_rh_joint5_3" joint="finger_rh_joint5_3" inheritrange="1"/>
+    <position class="finger_tip" name="finger_rh_joint5_4" joint="finger_rh_joint5_4" inheritrange="1"/>
+  </actuator>
+
+  <contact>
+    <!-- Right hand -->
+    <exclude body1="hx5_r_base" body2="finger_r_link1_1"/>
+    <exclude body1="finger_r_link1_1" body2="finger_r_link1_2"/>
+    <exclude body1="finger_r_link1_2" body2="finger_r_link1_3"/>
+    <exclude body1="finger_r_link1_3" body2="finger_r_link1_4"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link2_1"/>
+    <exclude body1="finger_r_link2_1" body2="finger_r_link2_2"/>
+    <exclude body1="finger_r_link2_2" body2="finger_r_link2_3"/>
+    <exclude body1="finger_r_link2_3" body2="finger_r_link2_4"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link3_1"/>
+    <exclude body1="finger_r_link3_1" body2="finger_r_link3_2"/>
+    <exclude body1="finger_r_link3_2" body2="finger_r_link3_3"/>
+    <exclude body1="finger_r_link3_3" body2="finger_r_link3_4"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link4_1"/>
+    <exclude body1="finger_r_link4_1" body2="finger_r_link4_2"/>
+    <exclude body1="finger_r_link4_2" body2="finger_r_link4_3"/>
+    <exclude body1="finger_r_link4_3" body2="finger_r_link4_4"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link5_1"/>
+    <exclude body1="finger_r_link5_1" body2="finger_r_link5_2"/>
+    <exclude body1="finger_r_link5_2" body2="finger_r_link5_3"/>
+    <exclude body1="finger_r_link5_3" body2="finger_r_link5_4"/>
+    <!-- Additional exclusions -->
+    <exclude body1="hx5_r_base" body2="finger_r_link1_2"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link2_2"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link3_2"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link4_2"/>
+    <exclude body1="hx5_r_base" body2="finger_r_link5_2"/>
+  </contact>
+
+  <equality>    
+    <weld body1="sh5_rh:mocap" body2="hx5_r_base" anchor="0 0 0" solimp="0.9 0.95 0.001" solref="0.04 1"></weld>
+  </equality>
+  
+  <sensor>      
+    <touch name="ffw_sh5_rh_0_touch" site="sh5_rh_0_touch" />
+    <touch name="ffw_sh5_r_arm_part_touch" site="sh5_r_arm_part_touch" /> 
+    <touch name="ffw_sh5_rh_1_touch" site="sh5_rh_1_touch" />
+    <touch name="ffw_sh5_rh_2_touch" site="sh5_rh_2_touch" />
+    <touch name="ffw_sh5_rh_3_touch" site="sh5_rh_3_touch" />
+    <touch name="ffw_sh5_rh_4_touch" site="sh5_rh_4_touch" />
+    <touch name="ffw_sh5_rh_5_touch" site="sh5_rh_5_touch" />
+    <touch name="ffw_sh5_rh_6_touch" site="sh5_rh_6_touch" />
+    <touch name="ffw_sh5_rh_7_touch" site="sh5_rh_7_touch" />
+    <touch name="ffw_sh5_rh_8_touch" site="sh5_rh_8_touch" />
+    <touch name="ffw_sh5_rh_9_touch" site="sh5_rh_9_touch" />
+    <touch name="ffw_sh5_rh_10_touch" site="sh5_rh_10_touch" />
+    <touch name="ffw_sh5_rh_11_touch" site="sh5_rh_11_touch" />
+    <touch name="ffw_sh5_rh_12_touch" site="sh5_rh_12_touch" />
+    <touch name="ffw_sh5_rh_13_touch" site="sh5_rh_13_touch" />
+    <touch name="ffw_sh5_rh_14_touch" site="sh5_rh_14_touch" />
+    <touch name="ffw_sh5_rh_15_touch" site="sh5_rh_15_touch" /> 
+
+
+    <!-- <contact name="ffw_sh5_rh_0_body_obj_contact" site="sh5_rh_0_touch" body2="top_watertight_tiny_0" reduce="maxforce"  num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_1_body_obj_contact" site="sh5_rh_1_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="ffw_sh5_rh_2_body_obj_contact" site="sh5_rh_2_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_3_body_obj_contact" site="sh5_rh_3_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_4_body_obj_contact" site="sh5_rh_4_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_5_body_obj_contact" site="sh5_rh_5_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_6_body_obj_contact" site="sh5_rh_6_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_7_body_obj_contact" site="sh5_rh_7_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_8_body_obj_contact" site="sh5_rh_8_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_9_body_obj_contact" site="sh5_rh_9_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_10_body_obj_contact" site="sh5_rh_10_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_11_body_obj_contact" site="sh5_rh_11_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_12_body_obj_contact" site="sh5_rh_12_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_13_body_obj_contact" site="sh5_rh_13_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_14_body_obj_contact" site="sh5_rh_14_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> -->
+
+    <contact name="ffw_sh5_rh_0_self_coll" body1="hx5_r_base" subtree2="hx5_r_base" reduce="maxforce"  num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_1_self_coll" body1="finger_r_link1_2" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="ffw_sh5_rh_2_self_coll" body1="finger_r_link1_3" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_3_self_coll" body1="finger_r_link1_4" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_4_self_coll" body1="finger_r_link2_2" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_5_self_coll" body1="finger_r_link2_3" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_6_self_coll" body1="finger_r_link2_4" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_7_self_coll" body1="finger_r_link3_2" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_8_self_coll" body1="finger_r_link3_3" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_9_self_coll" body1="finger_r_link3_4" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_10_self_coll" body1="finger_r_link4_2" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_11_self_coll" body1="finger_r_link4_3" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_12_self_coll" body1="finger_r_link4_4" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_13_self_coll" body1="finger_r_link5_2" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_14_self_coll" body1="finger_r_link5_3" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="ffw_sh5_rh_15_self_coll" body1="finger_r_link5_4" subtree2="hx5_r_base" reduce="maxforce" num="1"  data="found force pos normal"/>
+  </sensor>
+
+</mujoco>

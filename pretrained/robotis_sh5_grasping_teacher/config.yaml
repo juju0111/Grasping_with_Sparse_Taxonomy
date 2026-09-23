@@ -1,0 +1,419 @@
+using_hand_name_list:
+- robotis_sh5
+hand_type_list:
+- right
+dual_hand: true
+dual_y_offset: 0.4
+Training:
+  with_table: false
+  table_height: 0.6
+  table_xml_path: table/base_table.xml
+  floor_xml_path: floor/floor_simple_white.xml
+  n_obj: 1
+  n_pcd: 2048
+  xy_offset_range:
+  - -0.001
+  - 0.001
+  friction:
+  - 1.2
+  - 0.5
+  - 0.4
+  use_bps: true
+  use_bps_2x: false
+  bps_data_path: bps_basis_points.npz
+  n_bps: 1024
+  bps_gamma: 25.0
+  force_scale_for_state: 0.01
+  force_scale_for_reward: 0.1
+  obj_name: top_watertight_tiny
+  non_contact_obj_name: bottom_watertight_tiny
+  network_type: normal_tanh_mlp
+Dataset:
+  GraspXL:
+    use: true
+    obj_folder_name: new_training_set
+    obj_asset_dir_pre_fix: ../../asset/object
+    obj_xml_path: obj_only/top_watertight_tiny/top_watertight_tiny_with_bottom_watertight_tiny_with_sensor.xml
+    obj_name: top_watertight_tiny
+    non_contact_obj_name: bottom_watertight_tiny
+  RobustDexGrasp:
+    use: true
+    obj_folder_name: mixed_train
+    obj_asset_dir_pre_fix: ../../asset/object
+    obj_xml_path: obj_only/top_watertight_tiny/top_watertight_tiny_with_bottom_watertight_tiny_with_sensor.xml
+    obj_name: top_watertight_tiny
+    non_contact_obj_name: bottom_watertight_tiny
+  ShapeNet:
+    use: false
+    obj_folder_name: large_scale_obj
+    obj_asset_dir_pre_fix: ../../asset/object
+    obj_xml_path: obj_only/top_watertight_tiny/top_watertight_tiny_with_bottom_watertight_tiny_with_sensor.xml
+    obj_name: top_watertight_tiny
+    non_contact_obj_name: bottom_watertight_tiny
+  Objaverse:
+    use: false
+    use_simple: false
+    obj_folder_name: objaverse
+    obj_asset_dir_pre_fix: ../../asset/object
+    obj_xml_path: model_new.xml
+    obj_name: ''
+    non_contact_obj_name: None
+  Objaverse_simple:
+    use: false
+    use_simple: true
+    obj_folder_name: objaverse_simple
+    obj_asset_dir_pre_fix: ../../asset/object
+    obj_xml_path: model_float_soft_warp_decomposed.xml
+    obj_name: ''
+    non_contact_obj_name: None
+Opt:
+  iterations: 20
+  ls_iterations: 15
+  ccd_iterations: 15
+  ccd_tolerance: 1.0e-06
+  tolerance: 1.0e-08
+  impratio: 5.0
+  gravity:
+  - 0
+  - 0
+  - -9.81
+  cone: 1
+  solver: 2
+  contact_sensor_maxmatch: 96
+maxhullvert: 64
+nworld: 2048
+lf_y_offset: 0.5
+con_per_env: 150
+njmax_muiltiply: 8
+n_steps: 8
+n_sub_env: 30
+action_repeat: 1
+obj_idxs:
+- 0
+- 2
+- 3
+- 4
+- 5
+- 8
+- 9
+- 11
+- 12
+- 13
+- 14
+- 16
+- 17
+- 18
+- 21
+- 22
+- 24
+- 25
+- 26
+- 28
+- 29
+- 30
+- 31
+- 32
+- 33
+- 35
+- 36
+- 37
+- 38
+- 45
+eval_obj_idxs: null
+eval_nworld: null
+mjcf_arena_memory: 256M
+ctrl_dt: 0.04
+sim_dt: 0.005
+finger_gain:
+  kp: null
+  kv: null
+  damping_scale: null
+  kv_mode: critical
+  forcerange: null
+obj_idx: 3
+training:
+  reward_norm:
+    enabled: true
+    mode: return
+    center: false
+    clip: 10.0
+    eps: 1.0e-08
+    gamma: null
+  async_ppo: true
+  gamma: 0.99
+  gae_lambda: 0.95
+  unroll_length: 16
+  batch_size: 512
+  num_minibatch: 32
+  n_ppo_epochs: 8
+  clip_eps: 0.1
+  ent_coef: 0.0001
+  vf_coef: 0.5
+  max_grad_norm: 1.0
+  lr: 0.0001
+  desired_kl: null
+  lr_min: 1.0e-05
+  lr_max: 0.001
+  kl_adapt_factor: 1.5
+  total_new_steps: 150000000.0
+  n_evals: 250
+  eval_length: null
+  print_every: 10
+  consider_seen_step: false
+  seed: 42
+handler:
+  W_APPROACH: 1.0
+  K_APPROACH: 15.0
+  W_FINGER: 0.5
+  K_FINGER: 10.0
+  W_MIMIC: 0.0
+  K_MIMIC: 3.5
+  W_MIMIC_NAIVE: 0.0
+  MIMIC_ON_CTRL: true
+  MIMIC_ACTIVE_DEADZONE: 0.6
+  MIMIC_REST_DEADZONE: 0.2
+  W_WRIST_DIR: 1.0
+  K_WRIST_DIR: 0.25
+  W_LIFT: 5.0
+  W_VEL: 1.0
+  K_VEL: 0.25
+  VEL_ANG_WEIGHT: 0.1
+  W_OBJ_VEL: 1.0
+  K_OBJ_VEL: 0.5
+  OBJ_VEL_ANG_WEIGHT: 0.01
+  W_OBJ_XY_COEFF: 1.0
+  W_OBJ_R_COEFF: 1.0
+  OBJ_DIST_PENALTY_COEFF: -5.0
+  W_FACE_DIR: 0.3
+  W_SELF_COLL: 1.0
+  W_SELF_IMPULSE: 0.1
+  W_TABLE_CONTACT: 1.0
+  W_TABLE_IMPULSE: 0.1
+  W_TABLE_IMPULSE_DERIV: 0.1
+  TABLE_IMPULSE_DERIV_CLIP: 0.0
+  TABLE_PEN_OBJ_CONTACT_SCALE: 0.2
+  TABLE_PEN_OBJ_CONTACT_MIN_RATIO: 0.5
+  W_OBJ_TOUCH: 0.0
+  TOUCH_PEN_LIFT_SCALE: 0.3
+  OBJ_TOUCH_FREE_WEIGHT_K: 5.0
+  OBJ_TOUCH_FREE_ALPHA: 0.5
+  W_OBJ_TABLE_FORCE: 0.0
+  OBJ_TABLE_FREE_K: 0.0
+  OBJ_TABLE_FREE_ALPHA: 0.0
+  W_VIOLATION_PEN: 0.01
+  CTRL_COST: 0.001
+  K_ACTION_SMOOTH: 2.0
+  W_JOINT_LIMIT: 0.1
+  JOINT_LIMIT_MARGIN: 0.05
+  W_WRIST_HEIGHT: 0.0
+  WRIST_HEIGHT_MARGIN_M: 0.05
+  W_FINGER_HEIGHT: 0.01
+  FINGER_HEIGHT_MARGIN_M: 0.015
+  FINGER_HEIGHT_OBJ_CLEAR_M: 0.0
+  W_CONTACT_DIR: 3.0
+  W_CONTACT_RATIO: 1.0
+  W_CONTACT_POS: 5.0
+  W_CONTACT_NEG: 0.5
+  W_AFFORDANCE_POS: 0.1
+  W_AFFORDANCE_NEG: 0.5
+  W_FORCE_CLOSURE: 3.0
+  K_FORCE_CLOSURE: 0.25
+  W_SEM_RECALL: 3.0
+  W_SEM_PRECISION: 1.0
+  W_SEM_F1: 3.0
+  W_SEM_IOU: 1.0
+  CONTACT_POS_SUM: true
+  CONTACT_POS_BINARY_COS: true
+  CONTACT_RATIO_SUBGROUPS: true
+  CONTACT_RATIO_LIFT_BOOST: 1.0
+  TORQUE_BALANCE_COUPLING: 0.0
+  TORQUE_BALANCE_EPS: 0.02
+  REWARD_DT: 0.1
+  MIN_REWARD: -10.0
+  MAX_REWARD: 50.0
+  GATE_CONTACT_BY_TOUCH: true
+  TOUCH_EPS: 0.0001
+  TAXONOMY_PROB: 1.0
+  TARGET_PNT_NOISE_M: 0.02
+  TARGET_PNT_DYNAMIC: true
+  TARGET_PNT_DYNAMIC_NOISE_M: 0.001
+  FINGER_INIT_TAX_PULL_PROB: 0.6
+  FINGER_INIT_TAX_PULL_MIN: 0.2
+  FINGER_INIT_TAX_PULL_MAX: 0.6
+  EVAL_RESET_SEED: 12345
+  using_taxonomy_names: null
+  TAXONOMY_SIZE_CONDITIONED: false
+  TAXONOMY_SMALL_OBJ_DIAM_M: 0.06
+  OBS_TAX_ERR_DEADZONE: 0.1
+  OBS_OBJ_GROUND_PRELIFT_GATED: true
+  OBS_FORCE_LOG1P: true
+  OBS_FORCE_LOG1P_CAP: 50
+  OBS_TORQUE_PROXY_LOG1P: true
+  DONE_OBJ_Z_MIN: -0.05
+  DONE_OBJ_XY_DRIFT: 0.125
+  DONE_WRIST_X_Z: 0.9
+  DONE_OBJ_TOUCH: 50.0
+  DONE_OBJ_TOUCH_REST: 5.0
+  DONE_OBJ_VEL_Z: -15.0
+  DONE_HAND_OBJ_DIST: 0.5
+  DONE_HOLD_OBJ_DIST: 0.2
+  DONE_TABLE_IMPULSE: 1000000000.0
+  DONE_OBJ_GROUND_IMPULSE: 6.0
+  MAX_EPISODE_STEPS: 270
+  LIFT_STEP: 90
+  HOLD_STEP: 140
+  LIFT_TARGET_M: 0.1
+  LIFT_ACTION_DIST_M: 0.004
+  LIFT_RAMP_STEPS: 5.0
+  LIFT_RAMP_RATE: 0.25
+  LIFT_MIN_DIST_M: 0.004
+  LIFT_DECAY_START_STEP: 100000000.0
+  LIFT_DECAY_END_STEP: -1
+  ANTIGRAV_ALPHA: 0.5
+  ANTIGRAV_DECAY_START_STEP: 0
+  ANTIGRAV_DECAY_END_STEP: 60000000.0
+  XYZ_SCALE_TARGET_FRAC: 1.0
+  XYZ_SCALE_DECAY_START_STEP: 30000000.0
+  XYZ_SCALE_DECAY_END_STEP: 80000000.0
+  reward:
+    W_TABLE_CONTACT: null
+    W_TABLE_IMPULSE: null
+    W_OBJ_TOUCH: null
+    W_SELF_COLL: null
+    W_SELF_IMPULSE: null
+    W_CONTACT_RATIO: null
+    W_CONTACT_POS: null
+    W_TABLE_IMPULSE_DERIV: null
+    W_OBJ_TABLE_FORCE:
+    - 20.0
+    - 60000000.0
+    - 120000000.0
+    W_MIMIC:
+    - 0.1
+    - 40000000.0
+    - 120000000.0
+    W_MIMIC_NAIVE:
+    - 0.05
+    - 40000000.0
+    - 120000000.0
+  reward_gate:
+    metric: success_rate_lift
+    threshold: 0.7
+    progress_per_eval: 0.025
+    max_progress: 1.0
+    margin_band: 0.15
+  reward_start_step: 30000000.0
+  WRIST_SLOW_NEAR_M: 0.0
+  WRIST_SLOW_FAR_M: 0.1
+  WRIST_SLOW_FACTOR: 1.0
+  STAGE_ACTION_JAX_MODE: true
+  STAGE_FINGER_SLOW: 0.5
+  STAGE_TARGET_HOLD: true
+  LIFT_TARGET_INTEGRATE: true
+  WRIST_TARGET_LEAD_MAX_M: 0.04
+  W_BONUS: 0.1
+  APPROACH_BONUS: 0.1
+  GRASP_BONUS_VALUE: 0.1
+  SUCCESS_STREAK_MIN: 70
+  SUCCESS_REASON_CODE: 1
+  SUCCESS_LIFT_TOL_FRAC: 0.4
+  LIFT_SUCCESS_THRESH: 0.05
+  W_LIFT_SUCCESS_BONUS: 2.0
+  COVERAGE_BONUS_COUPLING: 1.0
+  COVERAGE_BONUS_EXP: 2.0
+  SUCCESS_DONE_PROMOTION: false
+  DYNAMIC_TARGET_ENABLED: false
+  DYNAMIC_TARGET_MIN_FRAC: 0.3
+  DYNAMIC_TARGET_MAX_FRAC: 0.7
+  OBS_CURR_PROGRESS: true
+  RETRY_ENABLED: true
+  RETRY_MAX: 1
+  RETRY_APPROACH_STEPS: 40
+  RETRY_MIN_LIFT_STEPS: 15
+  RETRY_MIN_HOLD_STEPS: 20
+  RETRY_DROP_CONTACT_STEPS: 5
+  RETRY_LIFT_THRESH_M: -1.0
+  RETRY_REQUIRE_CONTACT: true
+  SUCCESS_EARLY_ENABLED: true
+  SUCCESS_EARLY_LIFT_HOLD_STEPS: 40
+  OBS_EP_HORIZON_STEPS: 0
+  LAG_ETA: 0.05
+  LAG_ETA_DOWN: 0.01
+  LAG_UPDATE_EVERY: 10
+  LAG_WARMUP_STEPS: 20000000.0
+  LAG_VIOL_CLIP: 5.0
+  LAG_CONSTRAINTS:
+    W_TABLE_CONTACT:
+    - raw_table_contact_w
+    - 0.006
+    - 80.0
+    W_TABLE_IMPULSE:
+    - raw_table_impulse_w
+    - 0.002
+    - 80.0
+    W_SELF_COLL:
+    - raw_self_contact_w
+    - 0.03
+    - 25.0
+    W_SELF_IMPULSE:
+    - raw_self_impulse_w
+    - 0.005
+    - 25.0
+    W_OBJ_TOUCH:
+    - obj_touch_force
+    - 2.0
+    - 4.0
+  LAG_INIT_LAMBDA: {}
+output:
+  include_sim_in_name: false
+  run_tag: for_gframp_robotis_sh5
+task_name: grasping
+env_name: grasping_teacher
+env_type: single_hand
+geom_collision_type: mesh
+rl_env:
+  sim_nstep: 8
+  xyz_scale: 0.015
+  rot_scale: 0.03
+  finger_scale: 0.2
+  randomize_finger_init: true
+  finger_init_seed: 0
+  use_deadzone: false
+  xyz_deadzone_m: 0.005
+  rot_deadzone_deg: 1.0
+  finger_deadzone_deg: 0.0
+policy:
+  name: bps_encoder_mlp
+  bps_dim: 1024
+  bps_encoder_dim:
+  - 256
+  - 128
+  bps_latent_dim: 64
+  hidden_dim:
+  - 256
+  - 256
+  - 128
+  - 64
+  critic_hidden_dim:
+  - 256
+  - 256
+  - 256
+  - 256
+  min_std: 0.001
+  var_scale: 0.25
+  use_layernorm: true
+  obs_norm: true
+  obs_norm_clip: 10.0
+  state_dependent_std: false
+  init_std: 0.35
+wandb:
+  enabled: true
+  project: grit-grasping-rl
+  entity: null
+  name_template: robotis_sh5_newgain_gframp
+  group_template: '{hand_name}'
+  tags:
+  - grasping
+  - hand:{hand_name}_{hand_type}
+  reinit: true
+schema_version: 1

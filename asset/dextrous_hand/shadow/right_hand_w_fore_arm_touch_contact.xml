@@ -1,0 +1,517 @@
+<mujoco model="right_shadow_hand">
+  <compiler angle="radian" autolimits="true"/>
+
+  <option cone="elliptic" impratio="10"/>
+
+  <default>
+    <default class="right_hand">
+      <mesh scale="0.001 0.001 0.001"/>
+      <joint axis="1 0 0" damping="0.1" armature="0.01" frictionloss="0.01"/>   <!-- Grit tuning 2026-08-29: armature 0.0002→0.01 (+ kp 50→20 dampratio 1 below); Menagerie kp50/kv0 gave 62% overshoot, 360 rad/s -->
+      <position kp="20" dampratio="1.0" forcerange="-1 1"/>
+
+      <default class="wrist">
+        <joint damping="1"/>
+        <default class="wrist_y">
+          <joint axis="0 1 0" range="-0.523599 0.174533"/>
+          <position kp="20" dampratio="1.0" ctrlrange="-0.523599 0.174533" forcerange="-10 10"/>
+        </default>
+        <default class="wrist_x">
+          <joint range="-0.698132 0.488692"/>
+          <position kp="20" dampratio="1.0" ctrlrange="-0.698132 0.488692" forcerange="-5 5"/>
+        </default>
+      </default>
+
+      <default class="thumb">
+        <default class="thbase">
+          <joint axis="0 0 -1" range="-1.0472 1.0472" />
+          <position kp="20" dampratio="1.0" ctrlrange="-1.0472 1.0472" forcerange="-3 3"/>
+        </default>
+        <default class="thproximal">
+          <joint range="0 1.22173"/>
+          <position kp="20" dampratio="1.0" ctrlrange="0 1.22173" forcerange="-2 2"/>
+        </default>
+        <default class="thhub">
+          <joint range="-0.20944 0.20944"/>
+          <position kp="20" dampratio="1.0" ctrlrange="-0.20944 0.20944"/>
+        </default>
+        <default class="thmiddle">
+          <joint axis="0 -1 0" range="-0.698132 0.698132"/>
+          <position kp="20" dampratio="1.0" ctrlrange="-0.698132 0.698132"/>
+        </default>
+        <default class="thdistal">
+          <joint range="-0.261799 1.5708"/>
+          <position kp="20" dampratio="1.0" ctrlrange="-0.261799 1.5708"/>
+        </default>
+      </default>
+
+      <default class="metacarpal">
+        <joint axis="0.573576 0 0.819152" range="0 0.785398"/>
+        <position kp="20" dampratio="1.0" ctrlrange="0 0.785398"/>
+      </default>
+      <default class="knuckle">
+        <joint axis="0 -1 0" range="-0.349066 0.349066"/>
+        <position kp="20" dampratio="1.0" ctrlrange="-0.349066 0.349066"/>
+      </default>
+      <default class="proximal">
+        <joint range="-0.261799 1.45"/>
+        <position kp="20" dampratio="1.0" ctrlrange="-0.261799 1.45"/>
+      </default>
+      <default class="middle_distal">
+        <joint range="0 1.5708"/>
+        <position kp="20" dampratio="1.0" ctrlrange="0 3.1415"/>
+      </default>
+
+      <default class="plastic">
+        <geom solimp="0.5 0.99 0.0001" solref="0.005 1"/>
+        <default class="plastic_visual">
+          <geom type="mesh" material="black" contype="0" conaffinity="0" group="2"/>
+        </default>
+        <default class="plastic_collision">
+          <geom group="3"/>
+        </default>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <material name="black" specular="0.5" shininess="0.25" rgba="0.16355 0.16355 0.16355 1"/>
+    <material name="gray" specular="0.0" shininess="0.25" rgba="0.80848 0.80848 0.80848 1"/>
+    <material name="metallic" specular="0" shininess="0.25" rgba="0.9 0.9 0.9 1"/>
+
+    <material name="thumb_1" rgba="0.231373 0.580392 0.705882 1"/>
+    <material name="thumb_2" rgba="0.231373 0.610392 0.705882 1"/>
+    <material name="thumb_3" rgba="0.231373 0.650392 0.705882 1"/>
+    <material name="thumb_4" rgba="0.231373 0.680392 0.705882 1"/> 
+
+    <material name="index_1" rgba="0.615686 0.701765 0.729412 1"/>
+    <material name="index_2" rgba="0.615686 0.751765 0.729412 1"/>
+    <material name="index_3" rgba="0.615686 0.791765 0.729412 1"/>
+    <material name="index_4" rgba="0.615686 0.811765 0.729412 1"/>
+
+    <material name="middle_1" rgba="0.513726 0.737255 0.407843 1"/>
+    <material name="middle_2" rgba="0.613726 0.737255 0.407843 1"/>
+    <material name="middle_3" rgba="0.713726 0.737255 0.407843 1"/>
+    <material name="middle_4" rgba="0.763726 0.737255 0.407843 1"/>
+
+    <material name="ring_1" rgba="0.972549 0.529412 0.00392157 1"/>
+    <material name="ring_2" rgba="0.972549 0.729412 0.00392157 1"/>
+    <material name="ring_3" rgba="0.972549 0.829412 0.00392157 1"/>
+    <material name="ring_4" rgba="0.972549 0.889412 0.00392157 1"/>
+
+    <material name="little_1" rgba="0.7 0.74902 0.613725 1"/>
+    <material name="little_2" rgba="0.7 0.79902 0.6313725 1"/>
+    <material name="little_3" rgba="0.7 0.74902 0.663725 1"/>
+    <material name="little_4" rgba="0.7 0.74902 0.693725 1"/>
+
+
+    <mesh class="right_hand" file="assets/forearm_0.obj"/>
+    <mesh class="right_hand" file="assets/forearm_1.obj"/>
+    <mesh class="right_hand" file="assets/forearm_collision.obj"/>
+    <mesh class="right_hand" file="assets/wrist.obj"/>
+    <mesh class="right_hand" file="assets/palm.obj"/>
+    <mesh class="right_hand" file="assets/f_knuckle.obj"/>
+    <mesh class="right_hand" file="assets/f_proximal.obj"/>
+    <mesh class="right_hand" file="assets/f_middle.obj"/>
+    <mesh class="right_hand" file="assets/f_distal_pst.obj"/>
+    <mesh class="right_hand" file="assets/lf_metacarpal.obj"/>
+    <mesh class="right_hand" file="assets/th_proximal.obj"/>
+    <mesh class="right_hand" file="assets/th_middle.obj"/>
+    <mesh class="right_hand" file="assets/th_distal_pst.obj"/>
+  </asset>
+
+  <worldbody>
+    <body name="shadow_rh:mocap" mocap="true" pos="0. 0. 1.0">
+        <geom type="box" size=".01 .01 .01" contype="0" conaffinity="0" />
+    </body>
+
+    <!-- <body name="shadow_rh_palm" pos="0 0 1.0" quat="0.70711 0 0 0.70711"> -->
+    <body name="shadow_rh_palm" pos="0 0 1.0" quat="1 0 0 0">
+      <inertial mass="0.3" pos="0 0 0.035" quat="1 0 0 1" diaginertia="0.0003581 0.0005287 0.000191"/>
+      <joint name="shadow_rh_free_joint" type="free" damping="3.0" armature="0.01"/> 
+      <!-- <joint class="wrist_x" name="rh_WRJ1"/> -->
+      <site name="grasp_site" pos="0 -.035 0.09" quat="0.70711 0 0 0.70711" group="4"/>
+      <geom class="plastic_visual" quat="0.70711 0 0 0.70711" mesh="palm"/>
+      <geom size="0.031 0.0035 0.049" pos="0.011 0.0085 0.038" quat="0.70711 0 0 0.70711" type="box" class="plastic_collision"/>
+      <geom size="0.018 0.0085 0.049" pos="-0.002 -0.0035 0.038" quat="0.70711 0 0 0.70711" type="box" class="plastic_collision"/>
+      <geom size="0.013 0.0085 0.005" pos="-0.0035 0.029 0.082" quat="0.70711 0 0 0.70711" type="box" class="plastic_collision"/>
+      <!-- <geom size="0.013 0.007 0.009" pos="0.0265 -0.001 0.07" quat="0.987241 0.0990545 0.0124467 0.124052"
+        type="box" class="plastic_collision"/> -->
+
+      <!-- <geom size="0.0105 0.0135 0.012" pos="0.0315 -0.0085 0.001" quat="0.70711 0 0 0.70711" rgba="0 0 1 0.5" type="box" class="plastic_collision"/> -->
+      <geom size="0.0105 0.0135 0.012" pos="0.011 0.0215 0.001" quat="0.70711 0 0 0.70711" type="box" class="plastic_collision"/>
+      <!-- <geom size="0.011 0.0025 0.015" pos="0.0125 -0.015 0.004" quat="0.971338 0 0 -0.237703" type="box"
+        class="plastic_collision"/> -->
+      <geom size="0.011 0.0025 0.015" pos="0.015 -0.0215 0.004" quat="0.854926 0 0 0.51875" type="box"
+
+        class="plastic_collision"/>
+      <!-- <geom size="0.009 0.012 0.002" pos="0.011 0 0.089" quat="0.70711 0 0 0.70711" rgba="0 0 1 0.5" type="box" class="plastic_collision"/> -->
+      <geom size="0.01 0.012 0.02" pos="0.005 -0.0325 0.009" quat="0.70711 0 0 0.70711" rgba="0 0 1 0.5" type="box" class="plastic_collision"/>
+
+      <site name="shadow_rh_palm_touch" type="box" pos="0.012 0.012 0.065" quat="0.70711 0 0 0.70711" size="0.057 0.04 0.072" rgba="0 1 0 0.0"/>
+
+      <body name="shadow_r_arm_part" pos="0.0 0.0 -0.1" quat="0.70711 0 0 0.70711">      
+        <geom type="box" size="0.06 0.06 0.08" contype="1" conaffinity="1" rgba="0 0 0 0.5"/>      
+        <site name="shadow_r_arm_part_touch" type="box" pos="0.0 0.0 0.0" size="0.067 0.074 0.09" rgba="0 1 0 0."/> 
+      </body>
+
+      <body name="shadow_rh_hand_base" pos="0 0 0" quat="0.70711 0 0 0.70711" >
+
+        <body name="shadow_rh_ffknuckle" pos="0.033 0 0.095">
+          <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+          <joint name="rh_FFJ4" class="knuckle"/>
+          <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle" material="index_1"/>
+          <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+          
+          <body name="shadow_rh_ffproximal">
+            <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+            <joint name="rh_FFJ3" class="proximal"/>
+            <geom class="plastic_visual" mesh="f_proximal" material="index_2"/>
+            <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+            
+            <site name="shadow_rh_ffproximal_touch" type="box" pos="0.0 -0.01 0.025" size="0.012 0.017 0.033" rgba="0 1 0 0."/>
+      
+      
+
+            <body name="shadow_rh_ffmiddle" pos="0 0 0.045">
+              <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+              <joint name="rh_FFJ2" class="middle_distal"/>
+              <geom class="plastic_visual" mesh="f_middle" material="index_3"/>
+              <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+
+              <site name="shadow_rh_ffmiddle_touch" type="box" pos="0.0 -0.008 0.0125" size="0.012 0.0145 0.021" rgba="1 0 0 0."/>
+        
+        
+
+              <body name="shadow_rh_ffdistal" pos="0 0 0.025">
+                <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1"
+                  diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                <joint name="rh_FFJ1" class="middle_distal"/>
+                <geom class="plastic_visual" mesh="f_distal_pst" material="index_4"/>
+                <geom class="plastic_collision" type="mesh" mesh="f_distal_pst"/>
+
+                <site name="shadow_rh_ffdistal_touch" type="box" pos="0.0 -0.006 0.021" size="0.012 0.0130769 0.02" rgba="0 1 0 0."/>
+          
+
+                <body name="shadow_rh_ff_end" pos="0 0 0.031"/>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="shadow_rh_mfknuckle" pos="0.011 0 0.099">
+          <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+          <joint name="rh_MFJ4" class="knuckle"/>
+          <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle" material="middle_1"/>
+          <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+          <body name="shadow_rh_mfproximal">
+            <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+            <joint name="rh_MFJ3" class="proximal"/>
+            <geom class="plastic_visual" mesh="f_proximal" material="middle_2"/>
+            <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+
+            <site name="shadow_rh_mfproximal_touch" type="box" pos="0.0 -0.01 0.0255" size="0.012 0.017 0.032" rgba="0 1 0 0"/>
+      
+      
+
+            <body name="shadow_rh_mfmiddle" pos="0 0 0.045">
+              <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+              <joint name="rh_MFJ2" class="middle_distal"/>
+              <geom class="plastic_visual" mesh="f_middle" material="middle_3"/>
+              <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+              
+              <site name="shadow_rh_mfmiddle_touch" type="box" pos="0.0 -0.008 0.0125" size="0.012 0.0135 0.019" rgba="1 0 0 0."/>
+        
+        
+
+              <body name="shadow_rh_mfdistal" pos="0 0 0.025">
+                <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1"
+                  diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                <joint name="rh_MFJ1" class="middle_distal"/>
+                <geom class="plastic_visual" mesh="f_distal_pst" material="middle_4"/>
+                <geom class="plastic_collision" type="mesh" mesh="f_distal_pst"/>
+                
+                <site name="shadow_rh_mfdistal_touch" type="box" pos="0.0 -0.006 0.023" size="0.012 0.0120769 0.02" rgba="0 1 0 0."/>       
+
+                <body name="shadow_rh_mf_end" pos="0 0 0.031"/>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="shadow_rh_rfknuckle" pos="-0.011 0 0.095">
+          <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+          <joint name="rh_RFJ4" class="knuckle" axis="0 1 0"/>
+          <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle" material="ring_1"/>
+          <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+          <body name="shadow_rh_rfproximal">
+            <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+            <joint name="rh_RFJ3" class="proximal"/>
+            <geom class="plastic_visual" mesh="f_proximal" material="ring_2"/>
+            <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+            
+            <site name="shadow_rh_rfproximal_touch" type="box" pos="0.0 -0.01 0.025" size="0.012 0.016 0.034" rgba="0 1 0 0."/>
+      
+      
+
+            <body name="shadow_rh_rfmiddle" pos="0 0 0.045">
+              <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+              <joint name="rh_RFJ2" class="middle_distal"/>
+              <geom class="plastic_visual" mesh="f_middle" material="ring_3"/>
+              <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+              
+              <site name="shadow_rh_rfmiddle_touch" type="box" pos="0.0 -0.008 0.0125" size="0.012 0.0145 0.022" rgba="1 0 0 0."/>
+        
+        
+
+              <body name="shadow_rh_rfdistal" pos="0 0 0.025">
+                <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1"
+                  diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                <joint name="rh_RFJ1" class="middle_distal"/>
+                <geom class="plastic_visual" mesh="f_distal_pst" material="ring_4"/>
+                <geom class="plastic_collision" type="mesh" mesh="f_distal_pst"/>
+
+                <site name="shadow_rh_rfdistal_touch" type="box" pos="0.0 -0.005 0.023" size="0.012 0.0120769 0.022" rgba="0 1 0 0."/>
+          
+          
+
+                <body name="shadow_rh_rf_end" pos="0 0 0.031"/>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="shadow_rh_lfmetacarpal" pos="-0.033 0 0.02071">
+          <inertial mass="0.03" pos="0 0 0.04" quat="1 0 0 1" diaginertia="1.638e-05 1.45e-05 4.272e-06"/>
+          <joint name="rh_LFJ5" class="metacarpal"/>
+          <geom class="plastic_visual" mesh="lf_metacarpal"/>
+          <geom size="0.011 0.012 0.025" pos="0.002 0 0.033" type="box" class="plastic_collision"/>
+          
+          <body name="shadow_rh_lfknuckle" pos="0 0 0.06579">
+            <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+            <joint name="rh_LFJ4" class="knuckle" axis="0 1 0"/>
+            <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle" material="little_1"/>
+            <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+            
+
+            <body name="shadow_rh_lfproximal">
+              <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+              <joint name="rh_LFJ3" class="proximal"/>
+              <geom class="plastic_visual" mesh="f_proximal" material="little_2"/>
+              <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+    
+              <site name="shadow_rh_lfproximal_touch" type="box" pos="0.0 -0.009 0.025" size="0.012 0.016 0.034" rgba="0 1 0 0."/>
+
+              <body name="shadow_rh_lfmiddle" pos="0 0 0.045">
+                <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                <joint name="rh_LFJ2" class="middle_distal"/>
+                <geom class="plastic_visual" mesh="f_middle" material="little_3"/>
+                <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+                
+                <site name="shadow_rh_lfmiddle_touch" type="box" pos="0.0 -0.008 0.0125" size="0.012 0.0165 0.022" rgba="1 0 0 0."/>
+          
+                <body name="shadow_rh_lfdistal" pos="0 0 0.025">
+                  <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1"
+                    diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                  <joint name="rh_LFJ1" class="middle_distal"/>
+                  <geom class="plastic_visual" mesh="f_distal_pst" material="little_4"/>
+                  <geom class="plastic_collision" type="mesh" mesh="f_distal_pst"/>
+
+                  <site name="shadow_rh_lfdistal_touch" type="box" pos="0.0 -0.006 0.022" size="0.012 0.0140769 0.021" rgba="0 1 0 0."/>
+
+                  <body name="shadow_rh_lf_end" pos="0 0 0.031"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="shadow_rh_thbase" pos="0.034 -0.00858 0.029" quat="0.92388 0 0.382683 0">
+          <inertial mass="0.01" pos="0 0 0" diaginertia="1.6e-07 1.6e-07 1.6e-07"/>
+          <joint name="rh_THJ5" class="thbase"/>
+          <geom class="plastic_collision" size="0.013"/>
+          <body name="shadow_rh_thproximal">
+            <inertial mass="0.04" pos="0 0 0.019" diaginertia="1.36e-05 1.36e-05 3.13e-06"/>
+            <joint name="rh_THJ4" class="thproximal"/>
+            <geom class="plastic_visual" mesh="th_proximal" material="thumb_1"/>
+            <geom class="plastic_collision" size="0.0105 0.009" pos="0 0 0.02" type="capsule"/>
+
+            <site name="shadow_rh_thproximal_touch" type="box" pos="-0.01 0.0 0.018" size="0.02 0.02 0.03" rgba="1 0 0 0."/>
+      
+      
+            <body name="shadow_rh_thhub" pos="0 0 0.038">
+              <inertial mass="0.005" pos="0 0 0" diaginertia="1e-06 1e-06 3e-07"/>
+              <joint name="rh_THJ3" class="thhub"/>
+              <geom size="0.011" class="plastic_collision" material="thumb_2"/>
+              <body name="shadow_rh_thmiddle">
+                <inertial mass="0.02" pos="0 0 0.016" diaginertia="5.1e-06 5.1e-06 1.21e-06"/>
+                <joint name="rh_THJ2" class="thmiddle"/>
+                <geom class="plastic_visual" mesh="th_middle" material="thumb_3"/>
+                <geom size="0.009 0.009" pos="0 0 0.012" type="capsule" class="plastic_collision"/>
+                <geom size="0.01" pos="0 0 0.03" class="plastic_collision"/>
+
+                <site name="shadow_rh_thmiddle_touch" type="box" pos="0.0 0.0 0.0" size="0.015 0.015 0.043" rgba="1 0 0 0."/>
+          
+
+                <body name="shadow_rh_thdistal" pos="0 0 0.032" quat="1 0 0 -1">
+                  <inertial mass="0.017" pos="0 0 0.0145588" quat="1 0 0 1"
+                    diaginertia="2.37794e-06 2.27794e-06 1e-06"/>
+                  <joint name="rh_THJ1" class="thdistal"/>
+                  <geom class="plastic_visual" mesh="th_distal_pst" material="thumb_4"/>
+                  <geom class="plastic_collision" type="mesh" mesh="th_distal_pst"/>
+                  
+                  <site name="shadow_rh_thdistal_touch" type="box" pos="0.0 -0.006 0.021" size="0.012 0.0140769 0.02" rgba="0 1 0 0."/>
+
+                  <body name="shadow_rh_th_end" pos="0 0 0.034"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <!-- </body> -->
+    <!-- </body> -->
+  </worldbody>
+
+  <contact>
+    <exclude body1="shadow_rh_thproximal" body2="shadow_rh_palm"/>
+    <exclude body1="shadow_rh_lfmetacarpal" body2="shadow_rh_palm"/>
+    <exclude body1="shadow_rh_lfknuckle" body2="shadow_rh_palm"/>
+    
+    <exclude body1="shadow_rh_thproximal" body2="shadow_rh_thmiddle"/>
+
+  </contact>
+
+  <!-- Tendon 삭제 후 equality constraint로 변경 -->
+  <!-- <tendon>
+    <fixed name="R_FFJ0">
+      <joint joint="R_FFJ2" coef="1"/>
+      <joint joint="R_FFJ1" coef="1"/>
+    </fixed>
+    <fixed name="R_MFJ0">
+      <joint joint="R_MFJ2" coef="1"/>
+      <joint joint="R_MFJ1" coef="1"/>
+    </fixed>
+    <fixed name="R_RFJ0">
+      <joint joint="R_RFJ2" coef="1"/>
+      <joint joint="R_RFJ1" coef="1"/>
+    </fixed>
+    <fixed name="R_LFJ0">
+      <joint joint="R_LFJ2" coef="1"/>
+      <joint joint="R_LFJ1" coef="1"/>
+    </fixed>
+  </tendon> -->
+
+  <!-- Tendon 삭제 후 equality constraint로 변경 -->
+  <actuator>
+    <!-- <position name="rh_A_WRJ2" joint="R_WRJ2" class="wrist_y"/> -->
+    <!-- <position name="rh_A_WRJ1" joint="R_WRJ1" class="wrist_x"/> -->
+    <position name="rh_A_FFJ4" joint="rh_FFJ4" class="knuckle"/>
+    <position name="rh_A_FFJ3" joint="rh_FFJ3" class="proximal"/>
+    <!-- <position name="rh_A_FFJ0" tendon="R_FFJ0" class="middle_distal"/> -->
+    <position name="rh_A_FFJ2" joint="rh_FFJ2" class="middle_distal"/> 
+
+    <position name="rh_A_MFJ4" joint="rh_MFJ4" class="knuckle"/>
+    <position name="rh_A_MFJ3" joint="rh_MFJ3" class="proximal"/>
+    <!-- <position name="rh_A_MFJ0" tendon="R_MFJ0" class="middle_distal"/> --> 
+    <position name="rh_A_MFJ2" joint="rh_MFJ2" class="middle_distal"/>   
+
+    <position name="rh_A_RFJ4" joint="rh_RFJ4" class="knuckle"/>
+    <position name="rh_A_RFJ3" joint="rh_RFJ3" class="proximal"/>
+    <!-- <position name="rh_A_RFJ0" tendon="R_RFJ0" class="middle_distal"/> -->
+    <position name="rh_A_RFJ2" joint="rh_RFJ2" class="middle_distal"/>   
+    
+    <position name="rh_A_LFJ5" joint="rh_LFJ5" class="metacarpal"/>
+    <position name="rh_A_LFJ4" joint="rh_LFJ4" class="knuckle"/>
+    <position name="rh_A_LFJ3" joint="rh_LFJ3" class="proximal"/>
+    <!-- <position name="rh_A_LFJ0" tendon="R_LFJ0" class="middle_distal"/> -->
+    <position name="rh_A_LFJ2" joint="rh_LFJ2" class="middle_distal"/>   
+    
+    <position name="rh_A_THJ5" joint="rh_THJ5" class="thbase"/>
+    <position name="rh_A_THJ4" joint="rh_THJ4" class="thproximal"/>
+    <position name="rh_A_THJ3" joint="rh_THJ3" class="thhub"/>
+    <position name="rh_A_THJ2" joint="rh_THJ2" class="thmiddle"/>
+    <position name="rh_A_THJ1" joint="rh_THJ1" class="thdistal"/>
+  </actuator>
+
+  <contact>
+      <exclude body1="shadow_rh:mocap" body2="shadow_rh_palm" />
+      <exclude body1="shadow_rh_ffknuckle" body2="shadow_rh_palm" />
+      <exclude body1="shadow_rh_mfknuckle" body2="shadow_rh_palm" />
+      <exclude body1="shadow_rh_rfknuckle" body2="shadow_rh_palm" />
+      <exclude body1="shadow_rh_lfmetacarpal" body2="shadow_rh_palm" />
+      <exclude body1="shadow_rh_thbase" body2="shadow_rh_palm" />
+      <exclude body1="shadow_rh_ffknuckle" body2="shadow_rh_ffproximal" />
+      <exclude body1="shadow_rh_mfknuckle" body2="shadow_rh_mfproximal" />
+      <exclude body1="shadow_rh_rfknuckle" body2="shadow_rh_rfproximal" />
+      <exclude body1="shadow_rh_lfmetacarpal" body2="shadow_rh_lfproximal" />
+      <exclude body1="shadow_rh_thbase" body2="shadow_rh_thproximal" />
+  </contact>
+
+  <equality>
+      <weld body1="shadow_rh:mocap" body2="shadow_rh_palm" relpose="0 0 0 1 0 0 0" solimp="0.9 0.95 0.001" solref="0.03 1"></weld>
+
+      <!-- Tendon 삭제 후 equality constraint 추가 !-->
+      <joint joint1="rh_FFJ2" joint2="rh_FFJ1" polycoef="0 1. 0 0 0" active="true"/>
+      <joint joint1="rh_MFJ2" joint2="rh_MFJ1" polycoef="0 1. 0 0 0" active="true"/>
+      <joint joint1="rh_RFJ2" joint2="rh_RFJ1" polycoef="0 1. 0 0 0" active="true"/>
+      <joint joint1="rh_LFJ2" joint2="rh_LFJ1" polycoef="0 1. 0 0 0" active="true"/>
+  </equality>
+
+  <sensor>  
+    <touch name="shadow_rh_palm_body_touch" site="shadow_rh_palm_touch" />
+    <touch name="shadow_r_arm_part_touch" site="shadow_r_arm_part_touch" /> 
+
+    <touch name="shadow_rh_ffproximal_body_touch" site="shadow_rh_ffproximal_touch" />
+    <touch name="shadow_rh_ffmiddle_body_touch" site="shadow_rh_ffmiddle_touch" />
+    <touch name="shadow_rh_ffdistal_body_touch" site="shadow_rh_ffdistal_touch" />
+
+    <touch name="shadow_rh_mfproximal_body_touch" site="shadow_rh_mfproximal_touch" />
+    <touch name="shadow_rh_mfmiddle_body_touch" site="shadow_rh_mfmiddle_touch" />
+    <touch name="shadow_rh_mfdistal_body_touch" site="shadow_rh_mfdistal_touch" />
+
+    <touch name="shadow_rh_rfproximal_body_touch" site="shadow_rh_rfproximal_touch" />
+    <touch name="shadow_rh_rfmiddle_body_touch" site="shadow_rh_rfmiddle_touch" />
+    <touch name="shadow_rh_rfdistal_body_touch" site="shadow_rh_rfdistal_touch" />
+
+    <touch name="shadow_rh_lfproximal_body_touch" site="shadow_rh_lfproximal_touch" />
+    <touch name="shadow_rh_lfmiddle_body_touch" site="shadow_rh_lfmiddle_touch" />
+    <touch name="shadow_rh_lfdistal_body_touch" site="shadow_rh_lfdistal_touch" />
+
+    <touch name="shadow_rh_thproximal_body_touch" site="shadow_rh_thproximal_touch" />
+    <touch name="shadow_rh_thmiddle_body_touch" site="shadow_rh_thmiddle_touch" />
+    <touch name="shadow_rh_thdistal_body_touch" site="shadow_rh_thdistal_touch" />
+
+    <!-- <contact name="shadow_rh_palm_body_obj_contact" site="shadow_rh_palm_touch" body2="top_watertight_tiny_0" reduce="maxforce"  num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_ffproximal_body_obj_contact" site="shadow_rh_ffproximal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="shadow_rh_ffmiddle_body_obj_contact" site="shadow_rh_ffmiddle_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_ffdistal_body_obj_contact" site="shadow_rh_ffdistal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_mfproximal_body_obj_contact" site="shadow_rh_mfproximal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="shadow_rh_mfmiddle_body_obj_contact" site="shadow_rh_mfmiddle_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="shadow_rh_mfdistal_body_obj_contact" site="shadow_rh_mfdistal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_rfproximal_body_obj_contact" site="shadow_rh_rfproximal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_rfmiddle_body_obj_contact" site="shadow_rh_rfmiddle_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="shadow_rh_rfdistal_body_obj_contact" site="shadow_rh_rfdistal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_lfproximal_body_obj_contact" site="shadow_rh_lfproximal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_lfmiddle_body_obj_contact" site="shadow_rh_lfmiddle_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="shadow_rh_lfdistal_body_obj_contact" site="shadow_rh_lfdistal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_thproximal_body_obj_contact" site="shadow_rh_thproximal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_thmiddle_body_obj_contact" site="shadow_rh_thmiddle_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="shadow_rh_thdistal_body_obj_contact" site="shadow_rh_thdistal_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> -->
+
+    <contact name="shadow_rh_palm_self_coll" body1="shadow_rh_palm" subtree2="shadow_rh_palm" reduce="maxforce"  num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_ffproximal_self_coll" body1="shadow_rh_ffproximal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="shadow_rh_ffmiddle_self_coll" body1="shadow_rh_ffmiddle" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_ffdistal_self_coll" body1="shadow_rh_ffdistal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_mfproximal_self_coll" body1="shadow_rh_mfproximal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="shadow_rh_mfmiddle_self_coll" body1="shadow_rh_mfmiddle" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="shadow_rh_mfdistal_self_coll" body1="shadow_rh_mfdistal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_rfproximal_self_coll" body1="shadow_rh_rfproximal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_rfmiddle_self_coll" body1="shadow_rh_rfmiddle" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="shadow_rh_rfdistal_self_coll" body1="shadow_rh_rfdistal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_lfproximal_self_coll" body1="shadow_rh_lfproximal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_lfmiddle_self_coll" body1="shadow_rh_lfmiddle" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="shadow_rh_lfdistal_self_coll" body1="shadow_rh_lfdistal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_thproximal_self_coll" body1="shadow_rh_thproximal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="shadow_rh_thmiddle_self_coll" body1="shadow_rh_thmiddle" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="shadow_rh_thdistal_self_coll" body1="shadow_rh_thdistal" subtree2="shadow_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+  </sensor>
+
+
+</mujoco>

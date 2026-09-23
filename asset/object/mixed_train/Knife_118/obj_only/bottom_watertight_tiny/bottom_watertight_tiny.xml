@@ -1,0 +1,23 @@
+<mujoco model="bottom_watertight_tiny">
+  <default>
+    <default group="2" type="mesh" contype="0" conaffinity="0">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default group="3" type="mesh">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+  <asset>
+    <mesh file="bottom_watertight_tiny.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_0.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_1.obj"/>
+  </asset>
+  <worldbody>
+    <body name="bottom_watertight_tiny">
+      <freejoint/>
+      <geom mesh="bottom_watertight_tiny" group="2" type="mesh" rgba="1 0 1 0.8" contype="0" conaffinity="0"/>
+      <geom mesh="bottom_watertight_tiny_collision_0" rgba="0.05714790637993239 0.04104642499794142 0.7704133386798093 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_1" rgba="0.35641175596807917 0.7225773080263868 0.8113147606842466 1" group="3" type="mesh"/>
+    </body>
+  </worldbody>
+</mujoco>

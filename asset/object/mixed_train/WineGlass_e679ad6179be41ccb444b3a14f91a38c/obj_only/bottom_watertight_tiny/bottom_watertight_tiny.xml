@@ -1,0 +1,69 @@
+<mujoco model="bottom_watertight_tiny">
+  <default>
+    <default group="2" type="mesh" contype="0" conaffinity="0">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default group="3" type="mesh">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+  <asset>
+    <mesh file="bottom_watertight_tiny.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_0.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_1.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_2.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_3.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_4.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_5.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_6.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_7.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_8.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_9.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_10.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_11.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_12.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_13.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_14.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_15.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_16.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_17.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_18.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_19.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_20.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_21.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_22.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_23.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_24.obj"/>
+  </asset>
+  <worldbody>
+    <body name="bottom_watertight_tiny">
+      <freejoint/>
+      <geom mesh="bottom_watertight_tiny" group="2" type="mesh" rgba="1 0 1 0.8" contype="0" conaffinity="0"/>
+      <geom mesh="bottom_watertight_tiny_collision_0" rgba="0.5206752236920137 0.9148760650420463 0.6457667484245997 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_1" rgba="0.4826957552973832 0.018273340236024227 0.31880729373566086 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_2" rgba="0.4129709285513007 0.08484758098655654 0.28438492873805143 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_3" rgba="0.3535051950620831 0.307961609064459 0.6441520508785427 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_4" rgba="0.9198731883195904 0.5299000541519732 0.9409336540186441 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_5" rgba="0.9706679270755393 0.3848044775295504 0.030127862056882893 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_6" rgba="0.9874873428565522 0.8888866947094992 0.836779214231055 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_7" rgba="0.036383549814640315 0.6895370309665949 0.6593501386108649 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_8" rgba="0.3787728032101795 0.7249321198566804 0.6616760003288931 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_9" rgba="0.48191211479896745 0.41767285834429235 0.6511232680295174 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_10" rgba="0.6615176532478307 0.586590983531861 0.6973145642586989 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_11" rgba="0.09132403929414046 0.06692965557192487 0.8990169064084078 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_12" rgba="0.8747799296440874 0.11913679315894254 0.9719786088182184 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_13" rgba="0.4744508286284088 0.29994367872486105 0.44567208486517895 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_14" rgba="0.7108836687091518 0.5066853708204934 0.43776201088176336 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_15" rgba="0.19436125216023836 0.19690377300960882 0.07564505874676597 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_16" rgba="0.4882520474452642 0.4493160148515942 0.11994735140036705 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_17" rgba="0.8283064327321107 0.7763314337214579 0.1697397376918739 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_18" rgba="0.7073792406760349 0.8586641439302066 0.5949726469114632 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_19" rgba="0.8547107415599748 0.3546815367123458 0.8290544019112942 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_20" rgba="0.8684665371880523 0.4772055843226132 0.997857957798704 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_21" rgba="0.701931746904148 0.864273792495655 0.6275480783582438 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_22" rgba="0.31011889427799777 0.10428681274310059 0.9452195742635281 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_23" rgba="0.8830221682885634 0.2678517144714049 0.6991687943033088 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_24" rgba="0.0034077294137152547 0.9981991293802934 0.6945929866110676 1" group="3" type="mesh"/>
+    </body>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,175 @@
+# ══════════════════════════════════════════════════════════════════════
+# distill_teacher_to_student.yaml — teacher → deployable blind student (DAgger + RL fine-tune)
+#
+#   python scripts/distill.py -c distill_teacher_to_student                    # bundled tesollo teacher
+#   python scripts/distill.py -c distill_teacher_to_student --overrides teacher.hand=shadow \
+#       teacher.save_dir=pretrained/shadow_grasping_teacher
+#
+# Scratch DAgger (4000 iters) followed by the 600-iteration hybrid-RL stage; the
+# student env is ``grasping_student`` (see docs/DISTILL.md). distill.py reads this
+# file with plain OmegaConf (no Hydra `defaults:`), so it is flat and self-contained.
+# ══════════════════════════════════════════════════════════════════════
+# ──────────────────────────────────────────────────────────────────────
+# Recipe summary
+#   teacher = grasping_policy_async_best.yaml → deployable blind student
+#   · env grasping_student: re-grasp / early success / time scale, with the
+#     object obs zeroed at stage≥1 (lift~hold) and obj_ground_force = 0
+#   · re-grasp head: proprioception (qpos, torque_proxy, 3-step history) →
+#     drop prediction; 10 consecutive positives → stage rewind
+#   · post-RL: success-aligned reward (strict-streak bonus dominates, coverage
+#     coupling 1.0, table 5/5/5, self 3/1.5) + teacher-KL anchor + frozen head
+#
+# To start RL-only from an existing DAgger checkpoint:
+#   ... --overrides student.init_ckpt=<path> distill.n_iters=0
+# ──────────────────────────────────────────────────────────────────────
+teacher:
+  hand:        tesollo
+  task:        grasping
+  env_name:    grasping_teacher
+  name_suffix: _for_gframp   # output/checkpoints/<hand>_<task>_<env><name_suffix>
+  save_dir:    pretrained/tesollo_grasping_teacher   # explicit teacher dir (wins over name_suffix; delete this line to use output/checkpoints)
+  ep_horizon_steps: null                 # omitted automatically for the re-grasp student env
+
+student:
+  env_name:  grasping_student
+  init_ckpt: null                        # scratch DAgger (no warm start)
+  nworld:    2048
+  n_sub_env: 30                          # = len(obj_idxs) → the same 30 objects as the teacher
+  training_overrides:
+    # ── deployable observation constraints ──
+    student_drop_contact:   true         # no contact sensors
+    student_drop_ep_step:   true         # no tick progress
+    student_drop_obj_ground_force: true  # sim-only object-ground force
+    pv_freeze_initial_view: true         # single-shot frozen depth partial view
+    pv_pos_noise_std:       0.003
+    pv_dropout_prob:        0.05
+    pv_cam_noise_std:       0.010
+    # ── stage state machine (from observations instead of tick) ──
+    student_stage_from_obs: true
+    stage_lift_frac:        1.0
+    student_tracking_free:  false
+    student_track_approach_only: true    # live object tracking only in stage 0
+    student_track_rigid_attach:  false   # replaced by blind mode (object obs zeroed at stage≥1)
+    student_blind_after_grasp:   true
+    student_blind_fd_vel_obj:    true    # also mask the 6 object channels of fd_vel
+    student_blind_near_m:        0.0     # blind gate = obs-stage>=1 (0 = proximity latch OFF); the bundled run used this
+    # ── proprioceptive history (input to the re-grasp regressor) ──
+    student_hist_k:              3       # [joint_qpos, torque_proxy, last action] × 3
+    student_hist_include_act:    true
+    student_hist_skip_prob:      0.35    # control-period jitter DR
+    student_hist_noise_std:      0.03
+    student_act_delay_prob:      0.25
+
+  # ── RL fine-tune reward (success bonus + penalty centred) ──
+  handler_overrides:
+    # ── Goal: lift & strict success ↑, table contact ↓, keep the taxonomy contact ratio ──
+    # (a) strict-streak bonus = W_BONUS·GRASP_BONUS_VALUE·min(streak,70)·cov
+    #     bonus_active = lift target reached ∧ contact → the streak itself is the strict-success definition.
+    #     0.05×70 = up to 3.5/step, the dominant term (teacher 0.01×70=0.7).
+    W_BONUS:              1.0
+    GRASP_BONUS_VALUE:    0.05
+    # (b) lift bonus (every step with lift ≥ 5 cm) — teacher value
+    W_LIFT_SUCCESS_BONUS: 2.0
+    # (c) cov = (1−c)+c·contact_ratio scales (a)(b) → the bonus is only full when the taxonomy ratio is kept
+    COVERAGE_BONUS_COUPLING: 1.0
+    W_CONTACT_RATIO:      1.0            # teacher value on the shaping-gate side as well
+    # (d) keep the remaining shaping low (so RL does not relearn the approach)
+    W_APPROACH:   0.1
+    W_FINGER:     0.1
+    W_FACE_DIR:   0.1
+    W_MIMIC:      0.1
+    W_WRIST_DIR:  0.0
+    OBJ_DIST_PENALTY_COEFF: 0.0
+    W_CONTACT_DIR:    0.0
+    W_CONTACT_POS:    0.1
+    W_CONTACT_NEG:    0.1
+    W_AFFORDANCE_POS: 0.1
+    W_AFFORDANCE_NEG: 0.1
+    # (e) table-contact reduction — targeted penalties (same order of magnitude as the 3.5/step bonus)
+    W_TABLE_CONTACT:       5.0
+    W_TABLE_IMPULSE:       5.0
+    W_TABLE_IMPULSE_DERIV: 5.0
+    W_SELF_COLL:           3.0               # raised from 1.0: the student self-collides far more than the teacher
+    W_SELF_IMPULSE:        1.5               # raised from 0.5
+    W_OBJ_TOUCH:           0.5
+    W_VIOLATION_PEN:       5.0
+    # (f) keep the re-grasp recovery bonus; drop the hold-contact bonus (rewards contact regardless of band, conflicting with strict)
+    W_REGRASP_BONUS: 1.0
+    W_HOLD_CONTACT:  0.0
+    REGRASP_PRED_CONSEC:        10
+    REGRASP_STAGE_RESET_SOURCE: gt
+
+distill:
+  n_iters:             4000               # DAgger iterations, then rl_finetune (600 PPO iters)
+  lr:                  3.0e-4
+  desired_kl:          0.02
+  lr_min:              1.0e-6
+  lr_max:              1.0e-3
+  kl_adapt_factor:     1.5
+  loss:                mse+kl
+  buffer_cap:          400000
+  batch_size:          4096
+  grad_steps_per_iter: 4
+  beta_start:          0.7
+  beta_end:            0.1
+  p_blend:             0.2
+  dr_ramp_frac:        0.3                # reach full DR earlier to match the distribution at RL entry
+  critic_prefit:       false               # pre-fit the critic with GAE during DAgger
+  critic_prefit_len:   32
+  critic_prefit_epochs: 1
+  critic_prefit_lr:    1.0e-3
+  log_every:           100
+  # auxiliary heads
+  aux_objpd_coef:      2.0                # trunk → obj_pose_diff reconstruction (representation learning)
+  aux_regrasp_coef:    1.0                # proprioception → re-grasp signal (BCE)
+  aux_regrasp_pos_weight: 3.0
+  regrasp_input_terms: joint_qpos,torque_proxy,student_hist
+  regrasp_train_source: gt                # gt | pred | both — stage-rewind source during training
+
+rl_finetune:
+  enabled:     true
+  critic:      asym
+  iters:       600
+  rollout_len: 64                         # (γ stays 0.99)
+  ppo_epochs:  4
+  minibatch:   8192
+  clip:        0.2
+  gamma:       0.99
+  gae_lambda:  0.95
+  vf_coef:     0.5
+  ent_coef:    0.0
+  lr:          1.0e-4
+  # adaptive lr (KL-based). lr_min is raised to 1e-5 to prevent a complete freeze.
+  desired_kl:      0.02
+  lr_min:          1.0e-5
+  lr_max:          1.0e-3
+  kl_adapt_factor: 1.5
+  reward_norm:                            # same return-std normalization as train.py (vloss scale / grad-clip balance)
+    enabled: false                        # OFF — raw rewards. Enabling it reduced self-contact
+                                          #   somewhat in our runs with no change in strict success.
+    mode:    return
+    clip:    10.0
+  critic_warmup_iters: 30
+  # BC (teacher-KL) anchor. A stronger anchor keeps RL from disturbing the
+  # teacher's grasp behaviour, preserving strict success; a weaker one lets RL
+  # depart from the teacher under blind / re-grasp conditions. The anchor
+  # strength is the dial for the "preserve strict ↔ improve contact/table" trade-off.
+  bc_kl_start: 1.0
+  bc_kl_end:   0.15
+  freeze_regrasp_head: true               # freeze the re-grasp head during post-RL
+  log_every:   20
+
+stage_autocal:
+  enabled: true
+
+eval:
+  length: null
+
+wandb:
+  enabled: false                          # set true to log to W&B
+  project: grit-grasping-rl
+  entity:  null
+  name:    tesollo_distill_blind
+
+output:
+  run_tag: distilled

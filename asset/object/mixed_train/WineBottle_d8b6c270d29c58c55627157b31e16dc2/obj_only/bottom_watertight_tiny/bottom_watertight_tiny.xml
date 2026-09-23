@@ -1,0 +1,73 @@
+<mujoco model="bottom_watertight_tiny">
+  <default>
+    <default group="2" type="mesh" contype="0" conaffinity="0">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default group="3" type="mesh">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+  <asset>
+    <mesh file="bottom_watertight_tiny.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_0.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_1.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_2.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_3.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_4.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_5.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_6.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_7.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_8.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_9.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_10.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_11.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_12.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_13.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_14.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_15.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_16.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_17.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_18.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_19.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_20.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_21.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_22.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_23.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_24.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_25.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_26.obj"/>
+  </asset>
+  <worldbody>
+    <body name="bottom_watertight_tiny">
+      <freejoint/>
+      <geom mesh="bottom_watertight_tiny" group="2" type="mesh" rgba="1 0 1 0.8" contype="0" conaffinity="0"/>
+      <geom mesh="bottom_watertight_tiny_collision_0" rgba="0.35929622434542474 0.5335324106220165 0.547537008218392 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_1" rgba="0.10389313740215256 0.604737080615019 0.17585887528209865 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_2" rgba="0.8514231528252627 0.8542429562146931 0.20506669275062084 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_3" rgba="0.1500750547924573 0.08475637025811722 0.19643050422616015 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_4" rgba="0.7786771412765078 0.5554513819106439 0.4519946416289343 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_5" rgba="0.23947296324676903 0.4637221318754776 0.8088414165247433 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_6" rgba="0.5454223272713049 0.8100546236389217 0.156687363661548 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_7" rgba="0.14033566717947754 0.3440566445827389 0.015632221062965357 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_8" rgba="0.45573881019024165 0.962127157279183 0.536314830968746 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_9" rgba="0.5499323094355917 0.9515876153187143 0.04656657847631296 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_10" rgba="0.23689138778305774 0.2828889842851726 0.7168591561368057 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_11" rgba="0.8652119519560255 0.6246258782280636 0.5219315706724257 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_12" rgba="0.9439008514469948 0.19248984762881394 0.7894069822387243 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_13" rgba="0.22294702305519387 0.7959679929698471 0.9230450451924487 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_14" rgba="0.544946511846379 0.38234237732887677 0.5743183066227019 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_15" rgba="0.5135206811941021 0.3605186033393428 0.6966875481869497 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_16" rgba="0.6432360324417005 0.3439088704962594 0.4667378015252922 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_17" rgba="0.08259463375500009 0.516831317432542 0.8958000535897087 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_18" rgba="0.6948582681625625 0.04686180971889975 0.3182323322926578 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_19" rgba="0.09041435963877731 0.3100846635743342 0.8497559556733059 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_20" rgba="0.665869601506727 0.5152163222606323 0.6467517673303608 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_21" rgba="0.9440240873831256 0.700093955138199 0.5692519458781425 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_22" rgba="0.841607353744871 0.7300360296088501 0.5282461544093636 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_23" rgba="0.01446590763441813 0.5007529757459441 0.8093587339237492 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_24" rgba="0.19836846780706086 0.11888833443458258 0.357009953912491 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_25" rgba="0.6498108052285041 0.6659037839614763 0.5390808372377656 1" group="3" type="mesh"/>
+      <geom mesh="bottom_watertight_tiny_collision_26" rgba="0.20773251973438345 0.19196780671755287 0.9925755047340743 1" group="3" type="mesh"/>
+    </body>
+  </worldbody>
+</mujoco>

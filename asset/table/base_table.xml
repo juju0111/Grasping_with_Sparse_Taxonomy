@@ -1,0 +1,15 @@
+<mujoco model="bottom_watertight_tiny">
+  <asset>
+    <mesh file="box_subdivided.obj" scale="0.4 0.4 0.3"/>
+  </asset>
+  <!-- 이 MESH는 AABB가 1 meter -->
+  <worldbody>
+    <body name="base_table">
+      <!-- Fixed joint added -->
+      <geom mesh="box_subdivided" group="2" type="mesh" size="0.4 0.4 0.3" pos="0 0 0.3" rgba="0.63 0.76 0.63 0.5" contype="0" conaffinity="0"/>
+      <geom mesh="box_subdivided" size="0.4 0.4 0.3" pos="0 0 0.3" priority="1" condim="4" friction="1.0 0.05 0.01" solref="0.01 8.0" solimp="0.95 0.99 0.005 0.5 2" rgba="0.63 0.76 0.63 0.5" group="3" type="mesh"/>
+
+      <!-- solref="0.01 5.0" solimp="0.95 0.99 0.005 0.5 2" -->
+    </body>
+  </worldbody>
+</mujoco>

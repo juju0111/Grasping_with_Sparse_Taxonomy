@@ -1,0 +1,31 @@
+# ══════════════════════════════════════════════════════════════════════
+# grasping_policy_teacher.yaml — the recipe of every bundled teacher
+#
+#   python scripts/train.py -c grasping_policy_teacher                          # tesollo
+#   python scripts/train.py -c grasping_policy_teacher --overrides 'using_hand_name_list=[shadow]'
+#
+# = grasping_policy_async_best_w_ground_force (teacher recipe + object↔table
+#   force penalty) with looser hand↔table Lagrangian targets. 150 M steps,
+#   2048 worlds, ≈4 h on an RTX 5090. Output:
+#   output/checkpoints/<hand>_grasping_teacher_for_gframp/
+# ══════════════════════════════════════════════════════════════════════
+defaults:
+  - grasping_policy_async_best_w_ground_force
+  - _self_
+
+using_hand_name_list:
+  - tesollo
+
+handler:
+  reward_lagrangian:
+    LAG_CONSTRAINTS:
+      W_TABLE_CONTACT: [raw_table_contact_w, 0.006, 80.0]
+      W_TABLE_IMPULSE: [raw_table_impulse_w, 0.002, 80.0]
+
+wandb:
+  enabled: false                # set true (+ project/entity) to log to Weights & Biases
+  entity: null
+  name_template: '{save_dir_name}'
+
+output:
+  run_tag: for_gframp

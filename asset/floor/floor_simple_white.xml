@@ -1,0 +1,39 @@
+<mujoco model="simple white floor">
+
+    <visual>
+        <!-- Light -->
+        <!-- <headlight diffuse="0.55 0.55 0.55" ambient="0.12 0.12 0.12" /> -->
+        <headlight diffuse="0.35 0.35 0.35" ambient="0.08 0.08 0.08" />
+
+        <!-- Sky color -->
+        <rgba haze="0.92 0.92 0.92 0.5"/>
+    </visual>
+
+    <asset>
+        <texture type="skybox" builtin="flat" rgb1="0.92 0.92 0.92" rgb2="0.92 0.92 0.92" width="1024" height="3072"/>
+
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.88 0.88 0.88" rgb2="0.8 0.8 0.8" markrgb="0.0 0.0 0.0" width="1024" height="1024"/>
+
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="2 2" reflectance="0.0"/>
+    </asset>
+
+    <worldbody>
+        <light pos="0 0 6" dir="0 0 -1" directional="true" diffuse="0.45 0.45 0.5" specular="0.0 0.0 0.0" castshadow="true"/>
+
+        <!-- physics is still infinite, rendering is 10m x 10m centered at (0,0,0) -->
+        <!-- solref = [timeconst, dampratio]   (sim_dt = 0.005, so 2*dt = 0.01)
+               timeconst >= 2*dt for stability  →  use 0.02 (= 4*dt), matched to the
+                 object geom solref timeconst (hand_utils.build_obj_spec_lst, [0.02,1.0])
+                 so the combined object<->floor contact has one consistent stiffness.
+               dampratio in [1.0, 2.0]:
+                 <1.0  → underdamped → bounce
+                 1.5   → overdamped enough to kill bounce; D still < K during impact → no sinking
+                 >3.0  → D overwhelms K during downward impact → constraint inactive → object sinks
+             Was "0.01 5.0": dampratio 5.0 (>3) averaged with the object's [0.02,1.0]
+             to an effective ~[0.015, 3.0] contact, which made convex-decomposed
+             (multi-hull) non-flat meshes jitter/bounce on the floor. -->
+        <geom name="floor" type="plane" pos="0 0 0" size="5 5 0.05" material="groundplane" friction="0.5 0.05 0.01" condim="4" solref="0.01 7.5" solimp="0.99 0.999 0.001 0.5 2"/>
+        <!-- <geom name="floor" type="plane" pos="0 0 0" size="5 5 0.05" material="groundplane" friction="1.0 0.05 0.01" /> -->
+    </worldbody>
++
+</mujoco>

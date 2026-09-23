@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco model="top_watertight_tiny">
+  
+  
+  <default>
+    
+    
+    <default group="2" type="mesh" contype="0" conaffinity="0">
+      
+      
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+      
+    
+    </default>
+    
+    
+    <default group="3" type="mesh">
+      
+      
+      <geom group="3" type="mesh"/>
+      
+    
+    </default>
+    
+  
+  </default>
+  
+  
+  <asset>
+    
+    
+    <mesh file="top_watertight_tiny.obj"/>
+    
+    
+    <mesh file="top_watertight_tiny_collision_0.obj"/>
+    
+    
+    <mesh file="top_watertight_tiny_collision_1.obj"/>
+    
+  
+    <mesh file="bottom_watertight_tiny.obj"/>
+    <mesh file="bottom_watertight_tiny_collision_0.obj"/>
+  </asset>
+  
+  
+  <worldbody>
+    
+    
+    <body name="top_watertight_tiny">
+      
+      
+      <freejoint/>
+      
+      
+      <geom mesh="top_watertight_tiny" group="2" type="mesh" rgba="0.4 0.2 0.7 1" contype="0" conaffinity="0" solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3"/>
+      
+      
+      <geom mesh="top_watertight_tiny_collision_0" rgba="0.9012546359918974 0.45783732725358117 0.3843272259663454 1" group="3" type="mesh" solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3"/>
+      
+      
+      <geom mesh="top_watertight_tiny_collision_1" rgba="0.5070608629465976 0.6181572718652457 0.04829054372434827 1" group="3" type="mesh" solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3"/>
+      
+    
+      <body name="bottom_watertight_tiny">
+        
+      
+        <geom mesh="bottom_watertight_tiny" group="2" type="mesh" rgba="1 0 1 0.8" contype="0" conaffinity="0" solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3"/>
+        
+      
+        <geom mesh="bottom_watertight_tiny_collision_0" rgba="0.9855116125845749 0.8161522781275002 0.09822154773616876 1" group="3" type="mesh" solimp="0.90 0.95 0.001" solref="0.02 1.0" density="100" friction="0.95 0.4 0.3"/>
+        
+    
+      </body>
+      
+  
+    </body>
+    
+  
+  </worldbody>
+  
+
+</mujoco>

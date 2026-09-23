@@ -1,0 +1,377 @@
+# ══════════════════════════════════════════════════════════════════════
+# grasping_policy_async_best.yaml — **best-performing grasping teacher config**
+#
+# A **self-contained config** that inherits only base. The former multi-level
+# inheritance chain has been flattened into this file, so editing intermediate
+# files cannot silently change this setup. This file is the reference.
+#
+# ── Why this configuration ──────────────────────────────────────────────
+#   Among the candidate configurations it achieves the highest lift success and
+#   the lowest self-collision and object-touch force **without losing contact
+#   quality** (sem_f1 / contact_ratio within noise). Its remaining weakness is
+#   the mimic (taxonomy pose) error — the price of a self-collision penalty that
+#   structurally conflicts with taxonomy templates that bring the fingers together.
+#
+# ── Jitter countermeasure (K_ACTION_SMOOTH 0.1 → 2.0) ───────────────────
+#   Symptom: finger tremor, common to every run. Structural cause: the delta
+#   action mode (ctrl = qpos + a·s) re-anchors to the realized qpos every step,
+#   feeding contact/gravity noise back into the command, while the smoothness
+#   penalty was effectively void (r_smooth ≈ 0.998 at K=0.1). At K=2.0 the term
+#   actually bites: ‖Δa‖² roughly halves, joint reversal rates drop, lift and
+#   strict success improve slightly and the mimic error shrinks without any
+#   contact loss.
+#   A more fundamental alternative is rl_env.finger_action_mode: integ (cuts
+#   the re-anchoring path entirely); its interaction with the other axes here
+#   (λ constraints, retry) is unverified and would need retraining from scratch.
+#
+# ── Key components ──────────────────────────────────────────────────────
+#   env  grasping_teacher
+#        = async re-grasp (automatic stage rewind + early success) ∧ Lagrangian (λ constraints)
+#   [1] Retry: on lift failure / drop, ep_step is rewound to approach for a
+#       second attempt (MAX 270 = 160 + one 110-step cycle); roughly half of the
+#       first-attempt failures are recovered. The obs ep_step_norm is
+#       normalized by the single-attempt horizon T1=180 (not MAX).
+#   [2] λ constraints: penalty weights W are managed by dual ascent on
+#       E[metric] ≤ target instead of hand-tuned ramps. Pressure exists only on
+#       behaviours where the constraint is binding.
+#   [3] Table gate: while a grasp is established (ratio≥0.5) table contact is
+#       counted at only 0.2× (allows the contact flat objects require). The
+#       undiscounted diagnostic is tbl_active.
+#   [4] Distance-based wrist slowdown OFF (WRIST_SLOW_FACTOR 1.0) — dropped as
+#       redundant, off-target and agility-suppressing.
+#   [5] Multiplicative gates (W_CONTACT_RATIO 1.0 / LIFT_BOOST 1.0) are fixed
+#       at ≤1. Above 1 the bonuses inflate and neutralize the penalty scale.
+#
+# ── Training command ────────────────────────────────────────────────────
+#   PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+#     python3 scripts/train.py -c grasping_policy_async_best
+#
+#   Running it with no overrides reproduces the reference training: the run
+#     settings that used to be passed on the CLI (hand / obj_idxs / nworld /
+#     n_sub_env / total_new_steps / n_evals / reward_norm / obs_norm) are pinned
+#     in the [RUN] block below.
+#   expandable_segments is recommended for long runs (guards against CUDA OOM
+#     late in training).
+#   λ is stored in the checkpoint, so it is restored on resume
+#     (consider_seen_step=true). To start a new run from learned λ values use
+#     handler.reward_lagrangian.LAG_INIT_LAMBDA.
+# ══════════════════════════════════════════════════════════════════════
+defaults:
+  - base
+  - _self_
+
+# ── [RUN] run settings formerly passed as CLI overrides (marked [RUN] below) ──
+# If any of these eight differ, the hand, objects or normalization change and
+# the result is **a completely different training run**:
+#   using_hand_name_list / obj_idxs / n_sub_env / nworld /
+#   training.total_new_steps / training.n_evals /
+#   training.reward_norm.enabled / policy.obs_norm
+# Note: n_sub_env must equal len(obj_idxs) (on mismatch the orchestrator
+#   sub-samples with random.sample and the variant↔object mapping breaks).
+using_hand_name_list:
+- tesollo                     # [RUN] base default is robotis_sh5
+# ── Task identity (ckpt file name + inference lookup key) ───────────
+task_name: grasping
+env_name: grasping_teacher
+env_type: single_hand
+Training:
+  with_table: false
+
+nworld:    2048       # [RUN] parallel world count (base 4096)
+n_sub_env: 30         # [RUN] variant count — must equal len(obj_idxs)
+
+# Candidate pool of object indices (overrides base.yaml).
+#   null → uniform random sample over the active Dataset.
+#   list (≥ n_sub_env) → restrict pool; variants picked from it.
+obj_idxs: [0, 2, 3, 4, 5, 8, 9, 11, 12, 13, 14, 16, 17, 18, 21, 22, 24, 25, 26, 28,
+           29, 30, 31, 32, 33, 35, 36, 37, 38, 45]   # [RUN] base is null (random sampling)
+
+geom_collision_type: mesh
+# ── RL-env builder kwargs (= SubEnvHandler.BUILDER_KEYS) ───────────
+rl_env:
+  sim_nstep: 8
+  xyz_scale: 0.015
+  rot_scale: 0.03
+  finger_scale: 0.2
+  randomize_finger_init: true
+  finger_init_seed: 0
+  use_deadzone: false
+  xyz_deadzone_m: 0.005
+  rot_deadzone_deg: 1.0
+  finger_deadzone_deg: 0.0
+# ── Handler instance attrs (group names map 1:1 to CONFIG_KEYS_GROUPS) ─
+handler:
+  reward_tracking:
+    W_APPROACH: 1.0
+    K_APPROACH: 15.0
+    W_FINGER: 0.5
+    K_FINGER: 10.0
+    W_FACE_DIR: 0.3
+    W_MIMIC: 0.1
+    K_MIMIC: 3.5
+    MIMIC_ON_CTRL: true
+    W_MIMIC_NAIVE: 0.05
+    MIMIC_ACTIVE_DEADZONE: 0.6
+    MIMIC_REST_DEADZONE: 0.2
+    W_WRIST_DIR: 1.0
+    K_WRIST_DIR: 0.25
+    W_LIFT: 5.0
+    W_VEL: 1.0
+    K_VEL: 0.25
+    VEL_ANG_WEIGHT: 0.1
+    W_OBJ_VEL: 1.0
+    K_OBJ_VEL: 0.5
+    OBJ_VEL_ANG_WEIGHT: 0.01
+    W_OBJ_XY_COEFF: 1.0
+    W_OBJ_R_COEFF: 1.0
+    OBJ_DIST_PENALTY_COEFF: -5.0
+  reward_penalty:
+    W_SELF_COLL: 1.0
+    W_SELF_IMPULSE: 0.1
+    W_TABLE_CONTACT: 1.0
+    W_TABLE_IMPULSE: 0.1
+    W_OBJ_TOUCH: 0.25
+    TOUCH_PEN_LIFT_SCALE: 0.3
+    W_VIOLATION_PEN: 0.01
+    CTRL_COST: 0.001
+    K_ACTION_SMOOTH: 2.0    # jitter countermeasure (was 0.1). At 0.1 r_smooth≈0.998, i.e.
+                            # effectively void — at 2.0 it reaches 0.980 and actually bites.
+    W_WRIST_HEIGHT: 0.0
+    WRIST_HEIGHT_MARGIN_M: 0.05
+    W_FINGER_HEIGHT: 0.01
+    FINGER_HEIGHT_MARGIN_M: 0.015
+    FINGER_HEIGHT_OBJ_CLEAR_M: 0.0
+    W_TABLE_IMPULSE_DERIV: 0.1
+    TABLE_IMPULSE_DERIV_CLIP: 0.0
+    W_JOINT_LIMIT: 0.1
+    JOINT_LIMIT_MARGIN: 0.05
+    OBJ_TOUCH_FREE_WEIGHT_K: 5.0
+    OBJ_TOUCH_FREE_ALPHA: 0.5
+    TABLE_PEN_OBJ_CONTACT_SCALE: 0.2
+    TABLE_PEN_OBJ_CONTACT_MIN_RATIO: 0.5
+    # ── Object↔table collision penalty (the W_TABLE_* above are **hand**↔table only) ──
+    # Signal = obj_ground_force (object touch-sensor total − Σ hand-slot forces). The
+    # resting load of an object on the table (≈mg) is exempted via FREE_K; only the
+    # pressing/slamming excess is penalized.
+    W_OBJ_TABLE_FORCE: 0.0        # 0 = off (opt-in)
+    OBJ_TABLE_FREE_K: 1.0
+    OBJ_TABLE_FREE_ALPHA: 0.0
+  reward_contact:
+    W_CONTACT_RATIO: 1.0
+    W_CONTACT_DIR: 3.0
+    W_CONTACT_POS: 5.0
+    W_CONTACT_NEG: 0.5
+    W_AFFORDANCE_POS: 0.1
+    W_AFFORDANCE_NEG: 0.5
+    W_FORCE_CLOSURE: 3.0
+    K_FORCE_CLOSURE: 0.25
+    CONTACT_POS_SUM: true
+    CONTACT_POS_BINARY_COS: true
+    CONTACT_RATIO_SUBGROUPS: true
+    CONTACT_RATIO_LIFT_BOOST: 1.0
+    TORQUE_BALANCE_COUPLING: 0.0
+    TORQUE_BALANCE_EPS: 0.02
+    W_SEM_F1: 3.0
+    W_SEM_RECALL: 3.0
+    W_SEM_PRECISION: 1.0
+    W_SEM_IOU: 1.0
+  reward_lagrangian:
+    LAG_ETA: 0.05
+    LAG_ETA_DOWN: 0.01
+    LAG_UPDATE_EVERY: 10
+    LAG_WARMUP_STEPS: 20000000.0
+    LAG_VIOL_CLIP: 5.0
+    LAG_CONSTRAINTS:
+      W_TABLE_CONTACT:
+      - raw_table_contact_w
+      - 0.01
+      - 40.0
+      W_TABLE_IMPULSE:
+      - raw_table_impulse_w
+      - 0.005
+      - 40.0
+      W_SELF_COLL:
+      - raw_self_contact_w
+      - 0.03
+      - 25.0
+      W_SELF_IMPULSE:
+      - raw_self_impulse_w
+      - 0.005
+      - 25.0
+      W_OBJ_TOUCH:
+      - obj_touch_force
+      - 1.2
+      - 4.0
+  reward_post:
+    REWARD_DT: 0.1
+    MIN_REWARD: -10.0
+    MAX_REWARD: 50.0
+  contact_gating:
+    GATE_CONTACT_BY_TOUCH: true
+    TOUCH_EPS: 0.0001
+  obs:
+    OBS_TAX_ERR_DEADZONE: 0.1
+    OBS_OBJ_GROUND_PRELIFT_GATED: true
+    OBS_FORCE_LOG1P: true
+    OBS_FORCE_LOG1P_CAP: 50
+    OBS_TORQUE_PROXY_LOG1P: true
+  target_sampler:
+    TAXONOMY_PROB: 1.0
+    TARGET_PNT_NOISE_M: 0.02
+    TARGET_PNT_DYNAMIC: true
+    TARGET_PNT_DYNAMIC_NOISE_M: 0.001
+    FINGER_INIT_TAX_PULL_PROB: 0.6
+    FINGER_INIT_TAX_PULL_MIN: 0.2
+    FINGER_INIT_TAX_PULL_MAX: 0.6
+    EVAL_RESET_SEED: 12345
+    TAXONOMY_SIZE_CONDITIONED: false
+    TAXONOMY_SMALL_OBJ_DIAM_M: 0.06
+  termination:
+    DONE_OBJ_Z_MIN: -0.05
+    DONE_OBJ_XY_DRIFT: 0.125
+    DONE_WRIST_X_Z: 0.9
+    DONE_OBJ_TOUCH: 50.0
+    DONE_OBJ_VEL_Z: -15.0
+    DONE_OBJ_TOUCH_REST: 5.0
+    DONE_OBJ_GROUND_IMPULSE: 6.0
+    DONE_HAND_OBJ_DIST: 0.5
+    DONE_HOLD_OBJ_DIST: 0.2
+    DONE_TABLE_IMPULSE: 1000000000.0
+    MAX_EPISODE_STEPS: 270
+  retry:
+    RETRY_ENABLED: true
+    RETRY_MAX: 1
+    RETRY_APPROACH_STEPS: 40
+    RETRY_MIN_LIFT_STEPS: 15
+    RETRY_MIN_HOLD_STEPS: 20
+    RETRY_DROP_CONTACT_STEPS: 5
+    RETRY_LIFT_THRESH_M: -1.0
+    RETRY_REQUIRE_CONTACT: false   # true = retry only worlds that have touched the object (enabled in the variant yaml)
+    SUCCESS_EARLY_ENABLED: true
+    SUCCESS_EARLY_LIFT_HOLD_STEPS: 40
+    OBS_EP_HORIZON_STEPS: 0
+  curriculum:
+    reward_start_step: 30000000.0
+    reward_gate:
+      threshold: 0.8
+      progress_per_eval: 0.025
+      margin_band: 0.15
+    LIFT_STEP: 90
+    HOLD_STEP: 140
+    LIFT_TARGET_M: 0.1
+    LIFT_ACTION_DIST_M: 0.004
+    LIFT_RAMP_STEPS: 5.0
+    LIFT_RAMP_RATE: 0.25
+    LIFT_MIN_DIST_M: 0.004
+    LIFT_DECAY_START_STEP: 100000000.0
+    LIFT_DECAY_END_STEP: -1
+    ANTIGRAV_ALPHA: 0.5
+    ANTIGRAV_DECAY_START_STEP: 0
+    ANTIGRAV_DECAY_END_STEP: 60000000.0
+    XYZ_SCALE_TARGET_FRAC: 1.0
+    XYZ_SCALE_DECAY_START_STEP: 30000000.0
+    XYZ_SCALE_DECAY_END_STEP: 80000000.0
+    reward:
+      W_TABLE_CONTACT: null
+      W_TABLE_IMPULSE: null
+      W_OBJ_TOUCH: null
+      W_SELF_COLL: null
+      W_SELF_IMPULSE: null
+      W_CONTACT_RATIO: null
+      W_CONTACT_POS: null
+      W_TABLE_IMPULSE_DERIV: null
+  obs_priv:
+    OBS_CURR_PROGRESS: true
+  action_shaping:
+    WRIST_SLOW_NEAR_M: 0.0
+    WRIST_SLOW_FAR_M: 0.1
+    WRIST_SLOW_FACTOR: 1.0
+    STAGE_TARGET_HOLD: true
+    LIFT_TARGET_INTEGRATE: true
+    WRIST_TARGET_LEAD_MAX_M: 0.04
+    STAGE_ACTION_JAX_MODE: true
+    STAGE_FINGER_SLOW: 0.5
+  success:
+    W_BONUS: 0.1
+    APPROACH_BONUS: 0.1
+    GRASP_BONUS_VALUE: 0.1
+    SUCCESS_STREAK_MIN: 70
+    SUCCESS_REASON_CODE: 1
+    SUCCESS_DONE_PROMOTION: false
+    SUCCESS_LIFT_TOL_FRAC: 0.4
+    LIFT_SUCCESS_THRESH: 0.05
+    W_LIFT_SUCCESS_BONUS: 2.0
+    COVERAGE_BONUS_COUPLING: 1.0
+    COVERAGE_BONUS_EXP: 2.0
+  dynamic_target:
+    DYNAMIC_TARGET_ENABLED: false
+    DYNAMIC_TARGET_MIN_FRAC: 0.3
+    DYNAMIC_TARGET_MAX_FRAC: 0.7
+# ── PPO hyperparameters ───────────────────────────────────────────
+training:
+  async_ppo: true
+  gamma: 0.99
+  gae_lambda: 0.95
+  unroll_length: 16
+  batch_size: 512
+  num_minibatch: 32
+  n_ppo_epochs: 8
+  clip_eps: 0.1
+  ent_coef: 0.0001
+  vf_coef: 0.5
+  max_grad_norm: 1.0
+  lr: 0.0001
+  desired_kl: null
+  lr_min: 1.0e-05
+  lr_max: 0.001
+  kl_adapt_factor: 1.5
+  total_new_steps: 2e+8         # [RUN] base 1e+8
+  n_evals: 250                  # [RUN] base 400
+  reward_norm:                  # [RUN] base has enabled:false — OFF changes the λ / reward scale and breaks reproduction
+    enabled: true
+  eval_length: null
+  print_every: 10
+  consider_seen_step: false
+  seed: 42
+# ── Policy network ────────────────────────────────────────────────
+policy:
+  name: bps_encoder_mlp
+  bps_dim: 1024
+  bps_encoder_dim:
+  - 256
+  - 128
+  bps_latent_dim: 64
+  hidden_dim:
+  - 256
+  - 256
+  - 128
+  - 64
+  critic_hidden_dim:
+  - 256
+  - 256
+  - 256
+  - 256
+  min_std: 0.001
+  var_scale: 0.25
+  use_layernorm: true
+  obs_norm: true                # [RUN] base false — OFF causes a sharp performance drop
+  obs_norm_clip: 10.0
+  state_dependent_std: false
+  init_std: 0.35
+# ── Logging / resume ──────────────────────────────────────────────
+wandb:
+  enabled: true
+  project: grit-grasping-rl
+  entity: null
+  name_template: '{save_dir_name}'
+  group_template: '{hand_name}'
+  tags:
+  - grasping
+  - hand:{hand_name}_{hand_type}
+  reinit: true
+resume:
+  enabled: false
+  save_suffix: _resume
+  consider_seen_step: false
+output:
+  run_tag: v35_tighter

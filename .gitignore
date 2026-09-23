@@ -1,0 +1,19 @@
+# build products
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+# generated MJCF scenes (rebuilt on every env build)
+xml/
+**/scene_*.xml
+**/*_w_obj_*.xml
+**/*_variant_*.xml
+# training outputs / logs
+output/
+wandb/
+MUJOCO_LOG.TXT
+*.log
+# editor
+.vscode/
+.idea/
+.DS_Store

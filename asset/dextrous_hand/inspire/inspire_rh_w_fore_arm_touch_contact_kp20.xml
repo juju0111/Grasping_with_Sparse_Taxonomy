@@ -1,0 +1,306 @@
+<mujoco model="urdf_right_with_force_sensor">
+  <option cone="elliptic" impratio="10"/>
+
+  <compiler angle="radian" autolimits="true" />
+
+  <default>
+    <joint limited="true" armature="0.005" damping="0.1"/>   <!-- Grit tuning 2026-08-29 for real-torque forcerange ±2: kp 60→20 (dampratio 1), armature 0.1→0.005, damping 0.1 → t90 0.13 s, overshoot <1% (was 0.37 s / 23%) -->
+    <!-- <geom condim="4" contype="1" conaffinity="15" friction="0.9 0.2 0.2" solref="0.02 1" /> -->
+    <motor ctrllimited="true" />
+    <!-- <equality solref="0.001 2" /> -->
+    <default class="visualgeom">
+      <geom material="visualgeom" condim="1" contype="0" conaffinity="0" />
+    </default>
+  </default>
+  
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="meshes/base_link.STL"/>
+    <mesh name="palm_force_sensor" content_type="model/stl" file="meshes/palm_force_sensor.STL"/>
+    <mesh name="right_thumb_1" content_type="model/stl" file="meshes/right_thumb_1.STL"/>
+    <mesh name="right_thumb_2" content_type="model/stl" file="meshes/right_thumb_2.STL"/>
+    
+    <mesh name="right_thumb_3" content_type="model/stl" file="meshes/right_thumb_3.STL"/>
+    <mesh name="thumb_force_sensor_2" content_type="model/stl" file="meshes/thumb_force_sensor_2.STL"/>
+    <mesh name="right_thumb_4" content_type="model/stl" file="meshes/right_thumb_4.STL"/>
+    <mesh name="thumb_force_sensor_3" content_type="model/stl" file="meshes/thumb_force_sensor_3.STL"/>
+    <mesh name="thumb_force_sensor_4" content_type="model/stl" file="meshes/thumb_force_sensor_4.STL"/>
+    <mesh name="thumb_force_sensor_1" content_type="model/stl" file="meshes/thumb_force_sensor_1.STL"/>
+    <mesh name="right_index_1" content_type="model/stl" file="meshes/right_index_1.STL"/>
+    <mesh name="right_index_2" content_type="model/stl" file="meshes/right_index_2.STL"/>
+    <mesh name="index_force_sensor_2" content_type="model/stl" file="meshes/index_force_sensor_2.STL"/>
+    <mesh name="index_force_sensor_3" content_type="model/stl" file="meshes/index_force_sensor_3.STL"/>
+    <mesh name="index_force_sensor_1" content_type="model/stl" file="meshes/index_force_sensor_1.STL"/>
+    <mesh name="right_middle_1" content_type="model/stl" file="meshes/right_middle_1.STL"/>
+    <mesh name="right_middle_2" content_type="model/stl" file="meshes/right_middle_2.STL"/>
+    <mesh name="middle_force_sensor_2" content_type="model/stl" file="meshes/middle_force_sensor_2.STL"/>
+    <mesh name="middle_force_sensor_3" content_type="model/stl" file="meshes/middle_force_sensor_3.STL"/>
+    <mesh name="middle_force_sensor_1" content_type="model/stl" file="meshes/middle_force_sensor_1.STL"/>
+    <mesh name="right_ring_1" content_type="model/stl" file="meshes/right_ring_1.STL"/>
+    <mesh name="right_ring_2" content_type="model/stl" file="meshes/right_ring_2.STL"/>
+    <mesh name="ring_force_sensor_2" content_type="model/stl" file="meshes/ring_force_sensor_2.STL"/>
+    <mesh name="ring_force_sensor_3" content_type="model/stl" file="meshes/ring_force_sensor_3.STL"/>
+    <mesh name="ring_force_sensor_1" content_type="model/stl" file="meshes/ring_force_sensor_1.STL"/>
+    <mesh name="right_little_1" content_type="model/stl" file="meshes/right_little_1.STL"/>
+    <mesh name="right_little_2" content_type="model/stl" file="meshes/right_little_2.STL"/>
+    <mesh name="little_force_sensor_2" content_type="model/stl" file="meshes/little_force_sensor_2.STL"/>
+    <mesh name="little_force_sensor_3" content_type="model/stl" file="meshes/little_force_sensor_3.STL"/>
+    <mesh name="little_force_sensor_1" content_type="model/stl" file="meshes/little_force_sensor_1.STL"/>
+  </asset>
+
+  <actuator>
+    <!-- Position -->
+    <position name="rh_thumb_1_joint" joint="rh_thumb_1_joint" kp="20" dampratio="1.0" ctrlrange="0 1.16" />
+    <!-- 기존 kp 7 -->
+    <position name="rh_thumb_2_joint" joint="rh_thumb_2_joint" kp="20" dampratio="1.0" ctrlrange="0 0.55" />
+    <position name="rh_index_1_joint" joint="rh_index_1_joint" kp="20" dampratio="1.0" ctrlrange="0 1.57" />
+    <position name="rh_middle_1_joint" joint="rh_middle_1_joint" kp="20" dampratio="1.0" ctrlrange="0 1.57" />
+    <position name="rh_ring_1_joint" joint="rh_ring_1_joint" kp="20" dampratio="1.0" ctrlrange="0 1.57" />
+    <position name="rh_little_1_joint" joint="rh_little_1_joint" kp="20" dampratio="1.0" ctrlrange="0 1.57" />
+
+
+    <!-- Motor -->
+    <!-- <motor name="rh_thumb_1_joint" ctrlrange="-1 1" joint="rh_thumb_1_joint"/>
+    <motor name="rh_thumb_2_joint" ctrlrange="-3 3" joint="rh_thumb_2_joint"/>
+    <motor name="rh_index_1_joint" ctrlrange="-3 3" joint="rh_index_1_joint"/>
+    <motor name="rh_middle_1_joint" ctrlrange="-3 3" joint="rh_middle_1_joint"/>
+    <motor name="rh_ring_1_joint" ctrlrange="-3 3" joint="rh_ring_1_joint"/>
+    <motor name="rh_little_1_joint" ctrlrange="-3 3" joint="rh_little_1_joint"/> -->
+  </actuator>
+
+  <worldbody>
+    <body name="inspire_rh:mocap" mocap="true" pos="0. 0. 1.0" >
+        <geom type="box" size=".01 .01 .01" contype="0" conaffinity="0" />
+    </body>
+
+    <body name="inspire_rh_palm" pos="0 0 1.0">
+      <joint name="inspire_rh_free_joint" type="free" damping="2.0" /> 
+      <camera name="track" pos="1.258 -1.248 0.391" xyaxes="0.768 0.741 0.000 -0.201 0.122 0.987" mode="trackcom"/>
+      <camera name="track2" pos="1.258 -1.248 0.391" xyaxes="-0.768 -0.741 0.000 -0.201 0.122 0.987" mode="trackcom"/>
+
+      <geom type="mesh" rgba="1 1 1 1" mesh="base_link" pos="-0.00045 0.00045 0.0011" quat="0.7071 0.   0.  -0.7071"/>
+
+      <!-- <geom type="mesh" rgba="1 1 1 1" mesh="base_link" quat="1 0 0 0"/> -->
+      <!-- <geom pos="-0.00036819 0.012296 0.1196" quat="-2.59734e-06 -2.59735e-06 -0.707108 -0.707105" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="palm_force_sensor"/> -->
+      <!-- <site name="inspire_rh_palm_touch" type="box" size="0.048 0.049 0.109" pos="-0.003 0.011 0.117" euler="0.0 -0.01 1.571" rgba="1 0 0 0."/>  -->
+      <geom pos="0.011779586  0.0007957633  0.120715226" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.5 0.5 0.5" contype="0" conaffinity="0" mesh="palm_force_sensor"/>
+
+      <!-- <geom pos="-0.00036819 0.012296 0.1196" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="palm_force_sensor"/> -->
+
+      <site name="inspire_rh_palm_touch" type="box" size="0.048 0.059 0.109" pos="0.011 0.011 0.117" rgba="1 0 0 0."/> 
+
+
+      <body name="inspire_r_arm_part" pos="0.0 0.0 -0.1" quat="1 0 0 0 ">      
+        <geom type="box" size="0.06 0.06 0.08" contype="1" conaffinity="1" rgba="0 0 0 0.5"/>      
+        <site name="inspire_r_arm_part_touch" type="box" pos="0.0 0.0 0.0" size="0.067 0.074 0.09" rgba="0 1 0 0."/>
+      </body>
+
+      <body name="wrist_axis_align" pos="0 0 0.0" quat="0.7071 0.   0.  -0.7071">        
+      <!-- <body name="wrist_axis_align" pos="0 0 0.0019213119733518663" quat="1 0 0 0 ">         -->
+
+        <body name="inspire_right_thumb_1" pos="-0.0269 0.02101 0.0689">
+          <inertial pos="-0.000892587 0.000344906 0.00159994" quat="0.985466 0.0060554 -0.115048 -0.124838" mass="0.00746" diaginertia="1.34891e-07 1.09691e-07 6.68155e-08"/>
+          <joint name="rh_thumb_1_joint" pos="0 0 0" axis="0 0 -1" range="0 1.1641"  />
+          <!-- <geom type="mesh" rgba="1 0 1 1" mesh="right_thumb_1" contype="0" conaffinity="0"/> -->
+          <!-- <geom type="mesh" rgba="0.231373 0.380392 0.705882 1" mesh="inspire_right_thumb_1" contype="0" conaffinity="0" density="0" group="1" class="visualgeom" /> -->
+
+          <body name="inspire_right_thumb_2" pos="-0.0079252 0.0090599 0.0052" quat="0.0922934 0.0922938 0.701059 0.701056">
+            <inertial pos="0.0137224 0.0122221 -0.00660616" quat="0.520455 0.480802 -0.518888 0.478238" mass="0.04364" diaginertia="1.55793e-06 1.25338e-06 1.02798e-06"/>
+            <joint name="rh_thumb_2_joint" pos="0 0 0" axis="0 0 1" range="0 0.5864" />
+            <geom type="mesh" rgba="0.231373 0.480392 0.705882 1" mesh="right_thumb_2" contype="0" conaffinity="0"/>
+            <!-- <geom type="mesh" rgba="0.231373 0.480392 0.705882 1" mesh="right_thumb_2"/> -->
+            <geom pos="0.0087121 0.026305 -0.0067115" quat="0.579327 -0.405437 -0.579328 -0.405439" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="thumb_force_sensor_1"/>
+            <site name="inspire_rh_thumb_2_touch" type="box" size="0.021 0.029 0.015" pos="0.008887 0.026001 -0.007002" euler="0.0 0.0 0.38" rgba="1 0 0 0.0"/> 
+      
+      
+
+            <body name="inspire_right_thumb_3" pos="0.031403 0.021069 0.00095">
+              <inertial pos="0.0172139 0.00693067 -0.00734858" quat="0.313062 0.295147 0.642539 0.634053" mass="0.01172" diaginertia="1.21428e-06 1.21102e-06 4.76293e-07"/>
+              <joint name="rh_thumb_3_joint" pos="0 0 0" axis="0 0 1" range="0 0.5"  />
+              <geom type="mesh" rgba="0.231373 0.580392 0.705882 1" mesh="right_thumb_3"/>
+              <geom pos="0.011771 0.01699 -0.0077514" quat="-0.562601 0.428173 0.562767 0.4283" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="thumb_force_sensor_2"/>
+              <site name="inspire_rh_thumb_3_touch" type="box" size="0.0195 0.0195 0.018" pos="0.011887 0.016601 -0.008002" euler="0.0 0.0 0.4" rgba="1 0 0 0.0"/> 
+        
+
+              <body name="inspire_right_thumb_4" pos="0.021903 0.012816 -0.0003">
+                <inertial pos="0.0172139 0.00693067 -0.00734858" quat="0.313062 0.295147 0.642539 0.634053" mass="0.01" diaginertia="1.21428e-06 1.21102e-06 4.76293e-07"/>
+                <joint name="rh_thumb_4_joint" pos="0 0 0" axis="0 0 1" range="0 1.57"   />
+                <geom type="mesh" rgba="0.231373 0.680392 0.705882 1" mesh="right_thumb_4"/>
+                <geom pos="0.014598 0.01472 -0.0073103" quat="0.615658 -0.347798 -0.615661 -0.347797" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="thumb_force_sensor_3"/>
+                <geom pos="0.028987 0.017301 -0.0073512" quat="0.609148 -0.359083 0.609147 0.359081" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="thumb_force_sensor_4"/>
+                
+                <body name="inspire_right_thumb_face_tip" pos="0.02889  0.0175  -0.0075"/>
+                <body name="inspire_right_thumb_tip" pos="0.023887 0.015001 -0.007502"/>
+                <site name="inspire_rh_thumb_tip_touch" type="box" size="0.019 0.015 0.011" pos="0.013887 0.013501 -0.007002" euler="0. 0.0 0.6" rgba="1 0 0 0.0"/> 
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="inspire_right_index_1" pos="-0.038679 0.00056467 0.1564" quat="0.491197 0.508648 -0.50865 -0.491199">
+          <inertial pos="-0.00250946 0.0129756 -0.00664945" quat="0.43978 0.553736 -0.43972 0.55373" mass="0.02941" diaginertia="1.3073e-06 1.21406e-06 6.04179e-07"/>
+          <joint name="rh_index_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.6"   />
+          <geom type="mesh" rgba="0.513726 0.737255 0.407843 1" mesh="right_index_1"/>
+          <geom pos="-0.012046 0.019649 -0.006651" quat="0.704358 -0.0873853 -0.701686 -0.0622873" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="index_force_sensor_1"/>
+          <site name="inspire_rh_index_1_touch" type="box" size="0.023 0.031 0.012" pos="-0.0117512 0.019734 -0.006" euler="-0. 0.0 -0.0" rgba="1 0 0 0.0"/> 
+    
+    
+
+          <body name="inspire_right_index_2" pos="-0.0034259 0.032596 -0.00055">
+            <inertial pos="-0.000626825 0.0280689 -0.00609305" quat="0.701206 0.701662 0.0843061 0.0941982" mass="0.01418" diaginertia="3.02061e-06 2.99764e-06 3.20605e-07"/>
+            <joint name="rh_index_2_joint" pos="0 0 0" axis="0 0 1" range="0 2.14"  />
+            <geom type="mesh" rgba="0.613726 0.737255 0.407843 1" mesh="right_index_2"/>
+            <geom pos="-0.0081655 0.037446 -0.0060795" quat="0.693985 0.109758 -0.698536 0.13559" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="index_force_sensor_2"/>
+            <geom pos="-0.0086237 0.052572 -0.0060954" quat="0.66977 -0.257027 -0.658739 -0.226735" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="index_force_sensor_3"/>
+          
+            <body name="inspire_right_index_face_tip" pos="-0.00833  0.05273 -0.00555"/>
+            <body name="inspire_right_index_tip" pos="-0.0063312 0.049734 -0.00555"/>
+            <site name="inspire_rh_index_tip_touch" type="box" size="0.01 0.0385 0.01" pos="-0.0083312 0.037734 -0.006" euler="0. 0. 0.35" rgba="1 0 0 0.0"/> 
+      
+      
+          </body>
+        </body>
+        <body name="inspire_right_middle_1" pos="-0.0171 0.00056467 0.157" quat="0.499998 0.5 -0.500002 -0.5">
+          <inertial pos="-0.00250946 0.0129756 -0.00664945" quat="0.439783 0.553733 -0.439724 0.553727" mass="0.02941" diaginertia="1.30729e-06 1.21404e-06 6.04186e-07"/>
+          <joint name="rh_middle_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.6"    />
+          <geom type="mesh" rgba="0.615686 0.811765 0.729412 1" mesh="right_middle_1"/>
+          <geom pos="-0.012046 0.019649 -0.006651" quat="-0.703076 0.0754056 0.703073 0.0754054" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="middle_force_sensor_1"/>
+          <site name="inspire_rh_middle_1_touch" type="box" size="0.021 0.031 0.011" pos="-0.0125512 0.019734 -0.006" euler="-0. 0.0 -0.0" rgba="1 0 0 0.0"/> 
+    
+    
+
+          <body name="inspire_right_middle_2" pos="-0.0034259 0.032596 -0.00055">
+            <inertial pos="-0.0010746 0.0294269 -0.00610055" quat="0.701777 0.701805 0.086359 0.0867275" mass="0.01761" diaginertia="3.67099e-06 3.64893e-06 3.50671e-07"/>
+            <joint name="rh_middle_2_joint" pos="0 0 0" axis="0 0 1" range="0 2.14"  />
+            <geom type="mesh" rgba="0.615686 0.811765 0.929412 1" mesh="right_middle_2"/>
+            <geom pos="-0.0090859 0.040963 -0.0061003" quat="-0.695008 -0.130248 0.695006 -0.130249" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="middle_force_sensor_2"/>
+            <geom pos="-0.0098294 0.056051 -0.0061006" quat="-0.667101 0.234473 0.667099 0.234472" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="middle_force_sensor_3"/>
+
+            <body name="inspire_right_middle_face_tip" pos="-0.00933  0.05673 -0.00555"/>
+            <body name="inspire_right_middle_tip" pos="-0.0073312 0.052734 -0.00555"/>
+            <site name="inspire_rh_middle_tip_touch" type="box" size="0.01 0.0405 0.01" pos="-0.0093312 0.040734 -0.006" euler="0. 0. 0.3" rgba="1 0 0 0.0"/>       
+          </body>
+        </body>
+        <body name="inspire_right_ring_1" pos="0.0045302 0.00056467 0.15683" quat="0.512925 0.48673 -0.486732 -0.512927">
+          <inertial pos="-0.00250947 0.0129756 -0.00664945" quat="0.43978 0.553736 -0.43972 0.553729" mass="0.02941" diaginertia="1.3073e-06 1.21405e-06 6.04182e-07"/>
+          <joint name="rh_ring_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.6"   />
+          <geom type="mesh" rgba="0.972549 0.529412 0.00392157 1" mesh="right_ring_1"/>
+          <geom pos="-0.0120462 0.0196485 -0.00665098" quat="0.700879 -0.0559904 -0.704887 -0.0936441" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="ring_force_sensor_1"/>
+          <site name="inspire_rh_ring_1_touch" type="box" size="0.02 0.023 0.015" pos="-0.0113512 0.019734 -0.006" euler="0. 0. 0." rgba="1 0 0 0.0"/>
+    
+          <body name="inspire_right_ring_2" pos="-0.0034259 0.032596 -0.00055">
+            <inertial pos="-0.000577496 0.0279529 -0.00609306" quat="0.701185 0.701656 0.0843613 0.0943445" mass="0.01481" diaginertia="3.02577e-06 3.00292e-06 3.20723e-07"/>
+            <joint name="rh_ring_2_joint" pos="0 0 0" axis="0 0 1" range="0 2.14" />
+            <geom type="mesh" rgba="0.972549 0.729412 0.00392157 1" mesh="right_ring_2"/>
+            <geom pos="-0.00816549 0.0374458 -0.00607949" quat="0.699529 0.14203 -0.692696 0.103242" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="ring_force_sensor_2"/>
+            <geom pos="-0.00862373 0.0525719 -0.00609539" quat="0.655775 -0.219109 -0.672303 -0.264497" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="ring_force_sensor_3"/>
+
+            <body name="inspire_right_ring_face_tip" pos="-0.00833  0.05273 -0.00555"/>
+            <body name="inspire_right_ring_tip" pos="-0.0063312 0.049734 -0.00555"/>
+            <site name="inspire_rh_ring_tip_touch" type="box" size="0.01 0.0395 0.01" pos="-0.0083312 0.037734 -0.006" euler="0. 0. 0.25" rgba="1 0 0 0.0"/> 
+
+          </body>
+        </body>
+        <body name="inspire_right_little_1" pos="0.025916 0.00056467 0.15365" quat="0.525476 0.473152 -0.473154 -0.525478">
+          <inertial pos="-0.00250947 0.0129756 -0.00664944" quat="0.439779 0.553734 -0.439722 0.553731" mass="0.02941" diaginertia="1.3073e-06 1.21405e-06 6.04181e-07"/>
+          <joint name="rh_little_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.6"   />
+          <geom type="mesh" rgba="0.7 0.74902 0.913725 1" mesh="right_little_1"/>
+          <geom pos="-0.0120462 0.0196485 -0.00665098" quat="0.698121 -0.0371013 -0.706133 -0.112372" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="little_force_sensor_1"/>
+          <site name="inspire_rh_little_1_touch" type="box" size="0.02 0.031 0.011" pos="-0.0112512 0.019734 -0.006" euler="-0. 0.0 -0.0" rgba="1 0 0 0.0"/> 
+    
+          <body name="inspire_right_little_2" pos="-0.0034259 0.032596 -0.00055">
+            <inertial pos="0.000187954 0.0230755 -0.00610157" quat="0.700064 0.699803 0.100851 0.100075" mass="0.01157" diaginertia="1.69363e-06 1.66546e-06 2.40121e-07"/>
+            <joint name="rh_little_2_joint" pos="0 0 0" axis="0 0 1" range="0 2.14"   />
+            <geom type="mesh" rgba="0.7 0.84902 0.913725 1" mesh="right_little_2"/>
+            <geom pos="-0.00645124 0.0276833 -0.00611719" quat="0.702403 0.158797 -0.689045 0.0814212" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="little_force_sensor_2"/>
+            <geom pos="-0.00639723 0.0427069 -0.00611537" quat="0.645296 -0.19817 -0.67877 -0.289124" type="mesh" rgba="0.411765 0.411765 0.411765 1" contype="0" conaffinity="0" mesh="little_force_sensor_3"/>
+
+            <body name="inspire_right_little_face_tip" pos="-0.00608  0.04336 -0.00555"/>
+            <body name="inspire_right_little_tip" pos="-0.003582 0.040363 -0.00555"/>
+            <site name="inspire_rh_little_tip_touch" type="box" size="0.011 0.0315 0.01" pos="-0.0073312 0.028734 -0.006" euler="0. 0. 0.2" rgba="1 0 0 0.0"/>     
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <touch name="inspire_rh_palm_body_touch" site="inspire_rh_palm_touch" />
+    <touch name="inspire_r_arm_part_touch" site="inspire_r_arm_part_touch" /> 
+    
+    <touch name="inspire_rh_thumb_2_body_touch" site="inspire_rh_thumb_2_touch" />
+    <touch name="inspire_rh_thumb_3_body_touch" site="inspire_rh_thumb_3_touch" />
+    <touch name="inspire_rh_thumb_tip_body_touch" site="inspire_rh_thumb_tip_touch" />
+
+    <touch name="inspire_rh_index_1_body_touch" site="inspire_rh_index_1_touch" />
+    <touch name="inspire_rh_index_tip_body_touch" site="inspire_rh_index_tip_touch" />
+
+    <touch name="inspire_rh_middle_1_body_touch" site="inspire_rh_middle_1_touch" />
+    <touch name="inspire_rh_middle_tip_body_touch" site="inspire_rh_middle_tip_touch" />
+
+    <touch name="inspire_rh_ring_1_body_touch" site="inspire_rh_ring_1_touch" />
+    <touch name="inspire_rh_ring_tip_body_touch" site="inspire_rh_ring_tip_touch" />
+
+    <touch name="inspire_rh_little_1_body_touch" site="inspire_rh_little_1_touch" />
+    <touch name="inspire_rh_little_tip_body_touch" site="inspire_rh_little_tip_touch" />
+
+    <!-- <contact name="inspire_rh_palm_body_obj_contact" site="inspire_rh_palm_touch" body2="top_watertight_tiny_0" reduce="maxforce"  num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_thumb_2_body_obj_contact" site="inspire_rh_thumb_2_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_thumb_3_body_obj_contact" site="inspire_rh_thumb_3_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_thumb_tip_body_obj_contact" site="inspire_rh_thumb_tip_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_index_1_body_obj_contact" site="inspire_rh_index_1_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_index_tip_body_obj_contact" site="inspire_rh_index_tip_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_middle_1_body_obj_contact" site="inspire_rh_middle_1_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_middle_tip_body_obj_contact" site="inspire_rh_middle_tip_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_ring_1_body_obj_contact" site="inspire_rh_ring_1_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_ring_tip_body_obj_contact" site="inspire_rh_ring_tip_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_little_1_body_obj_contact" site="inspire_rh_little_1_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_little_tip_body_obj_contact" site="inspire_rh_little_tip_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> -->
+
+    <contact name="inspire_rh_palm_self_coll" body1="inspire_rh_palm" subtree2="inspire_rh_palm" reduce="maxforce"  num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_thumb_2_self_coll" body1="inspire_right_thumb_2" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_thumb_3_self_coll" body1="inspire_right_thumb_3" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_thumb_tip_self_coll" body1="inspire_right_thumb_4" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_index_1_self_coll" body1="inspire_right_index_1" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_index_tip_self_coll" body1="inspire_right_index_2" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_middle_1_self_coll" body1="inspire_right_middle_1" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_middle_tip_self_coll" body1="inspire_right_middle_2" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_ring_1_self_coll" body1="inspire_right_ring_1" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_ring_tip_self_coll" body1="inspire_right_ring_2" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_little_1_self_coll" body1="inspire_right_little_1" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="inspire_rh_little_tip_self_coll" body1="inspire_right_little_2" subtree2="inspire_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+  </sensor>
+
+  <!-- Weld (solref="0.02 1" solimp="0.9 0.95 0.001") -->
+  <equality>
+      <!-- <weld body1="inspire_rh:mocap" body2="inspire_rh_palm" anchor="0 0 0" solimp="0.85 0.92 0.001" solref="0.04 1"></weld> -->
+
+      <!-- <joint joint1="rh_thumb_2_joint" joint2="rh_thumb_3_joint" polycoef="0 0.8024 0 0 0" active="true"/> -->
+      <!-- 
+        For now, our kinematic solver assumes that joint1 is passive and joint2 is active. 
+        To ensure this, we directly find the relation between 'R_thumb_2_joint' and 'R_thumb_4_joint'. 
+        Note that 0.76123688=0.9487*0.8024 
+      -->
+      <weld body1="inspire_rh:mocap" body2="inspire_rh_palm" anchor="0 0 0" solimp="0.9 0.95 0.001" solref="0.04 1"></weld>
+
+      <joint joint1="rh_thumb_2_joint" joint2="rh_thumb_4_joint" polycoef="0 0.76123688 0 0 0" active="true"/>
+      <joint joint1="rh_thumb_3_joint" joint2="rh_thumb_4_joint" polycoef="0 0.9487 0 0 0" active="true"/>
+      <joint joint1="rh_index_1_joint" joint2="rh_index_2_joint" polycoef="0 1.0843 0 0 0" active="true"/>
+      <joint joint1="rh_middle_1_joint" joint2="rh_middle_2_joint" polycoef="0 1.0843 0 0 0" active="true"/>
+      <joint joint1="rh_ring_1_joint" joint2="rh_ring_2_joint" polycoef="0 1.0843 0 0 0" active="true"/>
+      <joint joint1="rh_little_1_joint" joint2="rh_little_2_joint" polycoef="0 1.0843 0 0 0" active="true"/>
+
+      
+  </equality>
+
+
+  <contact>
+      <exclude body1="inspire_rh:mocap" body2="inspire_rh_palm" />
+      <exclude body1="wrist_axis_align" body2="inspire_right_thumb_1" />
+      <exclude body1="wrist_axis_align" body2="inspire_right_thumb_2" />
+      <exclude body1="wrist_axis_align" body2="inspire_right_thumb_1" />
+      <exclude body1="inspire_right_thumb_1" body2="inspire_right_thumb_2" />
+      <exclude body1="wrist_axis_align" body2="inspire_right_thumb_3" />
+
+      <!-- <exclude body1="allex_R_Hand_Palm" body2="allex_R_Hand_Thumb_Proximal"/> -->
+  </contact> 
+
+</mujoco>

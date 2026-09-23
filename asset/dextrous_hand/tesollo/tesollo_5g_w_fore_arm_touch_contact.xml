@@ -1,0 +1,343 @@
+<mujoco model="dg5f_right">  
+	<compiler angle="radian"/>
+  <!-- Default setting -->  
+  <default>      
+	  <joint limited="true" armature="0.01"/>
+  
+  </default> 
+
+  <asset>    
+    <mesh name="rl_dg_mount_c" file="meshes/dg5f_right/collision/rl_dg_mount_c.STL"/>    
+    <mesh name="rl_dg_base_c" file="meshes/dg5f_right/collision/rl_dg_base_c.STL"/>    
+    <mesh name="rl_dg_palm_c" file="meshes/dg5f_right/collision/rl_dg_palm_c.STL"/>    
+    <mesh name="rl_dg_1_1_c" file="meshes/dg5f_right/collision/rl_dg_1_1_c.STL"/>    
+    <mesh name="rl_dg_1_2_c" file="meshes/dg5f_right/collision/rl_dg_1_2_c.STL"/>    
+    <mesh name="rl_dg_1_3_c" file="meshes/dg5f_right/collision/rl_dg_1_3_c.STL"/>    
+    <mesh name="rl_dg_1_4_c" file="meshes/dg5f_right/collision/rl_dg_1_4_c.STL"/>    
+    <mesh name="rl_dg_1_tip_c" file="meshes/dg5f_right/collision/rl_dg_1_tip_c.STL"/>    
+    <mesh name="rl_dg_2_1_c" file="meshes/dg5f_right/collision/rl_dg_2_1_c.STL"/>    
+    <mesh name="rl_dg_2_2_c" file="meshes/dg5f_right/collision/rl_dg_2_2_c.STL"/>    
+    <mesh name="rl_dg_2_3_c" file="meshes/dg5f_right/collision/rl_dg_2_3_c.STL"/>    
+    <mesh name="rl_dg_2_4_c" file="meshes/dg5f_right/collision/rl_dg_2_4_c.STL"/>   
+    <mesh name="rl_dg_2_tip_c" file="meshes/dg5f_right/collision/rl_dg_2_tip_c.STL"/>   
+    <mesh name="rl_dg_3_1_c" file="meshes/dg5f_right/collision/rl_dg_3_1_c.STL"/>  
+    <mesh name="rl_dg_3_2_c" file="meshes/dg5f_right/collision/rl_dg_3_2_c.STL"/>  
+    <mesh name="rl_dg_3_3_c" file="meshes/dg5f_right/collision/rl_dg_3_3_c.STL"/>  
+    <mesh name="rl_dg_3_4_c" file="meshes/dg5f_right/collision/rl_dg_3_4_c.STL"/>
+    <mesh name="rl_dg_3_tip_c" file="meshes/dg5f_right/collision/rl_dg_3_tip_c.STL"/> 
+    <mesh name="rl_dg_4_1_c" file="meshes/dg5f_right/collision/rl_dg_4_1_c.STL"/>    
+    <mesh name="rl_dg_4_2_c" file="meshes/dg5f_right/collision/rl_dg_4_2_c.STL"/>    
+    <mesh name="rl_dg_4_3_c" file="meshes/dg5f_right/collision/rl_dg_4_3_c.STL"/>    
+    <mesh name="rl_dg_4_4_c" file="meshes/dg5f_right/collision/rl_dg_4_4_c.STL"/>    
+    <mesh name="rl_dg_4_tip_c" file="meshes/dg5f_right/collision/rl_dg_4_tip_c.STL"/>    
+    <mesh name="rl_dg_5_1_c" file="meshes/dg5f_right/collision/rl_dg_5_1_c.STL"/>    
+    <mesh name="rl_dg_5_2_c" file="meshes/dg5f_right/collision/rl_dg_5_2_c.STL"/>    
+    <mesh name="rl_dg_5_3_c" file="meshes/dg5f_right/collision/rl_dg_5_3_c.STL"/>    
+    <mesh name="rl_dg_5_4_c" file="meshes/dg5f_right/collision/rl_dg_5_4_c.STL"/>    
+    <mesh name="rl_dg_5_tip_c" file="meshes/dg5f_right/collision/rl_dg_5_tip_c.STL"/>  
+  </asset>
+
+  <worldbody>    
+    <body name="tesollo_rh:mocap" mocap="true" pos="0. 0. 1.0">        
+      <geom type="box" size=".01 .01 .01" contype="0" conaffinity="0"/>        
+      <site name="tesollo_rh_mocap" type="box" size=".01 .01 .01" />    
+    </body>
+
+    <body name="tesollo_rh_palm" pos="0 0 1.0" quat="1 0 0 0 ">      
+      <joint name="tesollo_rh_free_joint" type="free" damping="3.0" />       
+      <camera name="track" pos="1.258 -1.248 0.391" xyaxes="0.768 0.741 0.000 -0.201 0.122 0.987" mode="trackcom"/>      
+      <!-- <body name="wrist_cam" pos="-0.0811398 0.0365688 0.11376627" quat="0.704414448 -0.069683669 0.0685511278 -0.703025757"/> -->
+
+      <geom type="mesh" mesh="rl_dg_mount_c" rgba="0.15 0.15 0.15 1"/>      
+      <geom pos="0 0 0.004" type="mesh" mesh="rl_dg_base_c" rgba="0.15 0.15 0.15 1"/>      
+      <geom pos="0 0 0.0738" quat="1 0 0 0" type="mesh" mesh="rl_dg_palm_c" rgba="1 1 1 1"/>
+      <site name="rh_dg_0_touch" type="box" pos="0.019 0.003 0.135" size="0.07 0.06 0.1" rgba="0 1 0 0.0"/>
+
+      <body name="tesollo_r_arm_part" pos="0 0 -0.1" quat="1 0 0 0 ">      
+        <geom type="box" size="0.06 0.06 0.08" contype="1" conaffinity="1" rgba="0 0 0 0.5"/>      
+        <site name="tesollo_r_arm_part_touch" type="box" pos="0.0 0.0 0.0" size="0.08 0.09 0.09" rgba="0 1 0 0."/>
+      </body>
+      <body name="rl_dg_1_1" pos="-0.0162 0.019 0.0866">       
+        <inertial pos="0.021473 3.1163e-06 0.0028146" quat="0.414969 0.572521 0.572945 0.414433" mass="0.045" diaginertia="1.3718e-05 1.31155e-05 3.31624e-06"/>        
+        <joint name="rh_dg_1_1" pos="0 0 0" axis="1 0 0" range="-0.383972 0.890118" actuatorfrcrange="-7.5 7.5"/>        
+        <geom type="mesh" mesh="rl_dg_1_1_c" rgba="0.231373 0.580392 0.705882 1"/>        
+        <body name="rl_dg_1_2" pos="0.04195 0 0">          
+          <inertial pos="0.00055633 0.0155 0.00055633" quat="0.379972 0.152995 -0.59634 0.690357" mass="0.025" diaginertia="2.07162e-06 1.99661e-06 1.37777e-06"/>          
+          <!-- <joint name="rh_dg_1_2" pos="0 0 0" axis="0 0 1" range="-3.14159 0" actuatorfrcrange="-7.5 7.5"/> -->          
+          <joint name="rh_dg_1_2" pos="0 0 0" axis="0 0 1" range="-2.54159 0" actuatorfrcrange="-7.5 7.5"/>
+          <geom type="mesh" mesh="rl_dg_1_2_c" rgba="0.231373 0.610392 0.705882 1"/>                    
+          <site name="rh_dg_1_2_touch" type="box" pos="0.0 0.019 0.001" size="0.014 0.026 0.013" rgba="0 1 0 0."/>
+    
+          <body name="rl_dg_1_3" pos="0 0.031 0">            
+            <inertial pos="2.3008e-05 0.014842 4.7446e-06" quat="0.523748 0.473568 -0.525398 0.474739" mass="0.045" diaginertia="6.4181e-06 6.01585e-06 2.42154e-06"/>            
+            <!-- <joint name="rh_dg_1_3" pos="0 0 0" axis="1 0 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->            
+            <joint name="rh_dg_1_3" pos="0 0 0" axis="1 0 0" range="-0.0708 1.5708" actuatorfrcrange="-7.5 7.5"/>            
+            <geom type="mesh" mesh="rl_dg_1_3_c" rgba="0.231373 0.660392 0.705882 1"/>                        
+            <site name="rh_dg_1_3_touch" type="box" pos="0.0 0.02 0.009" size="0.013 0.027 0.018" rgba="1 0 0 0."/>
+      
+            <body name="rl_dg_1_4" pos="0 0.0388 0">              
+              <inertial pos="-0.000182282 0.0140657 0.000732812" quat="0.521074 0.440882 -0.475371 0.555092" mass="0.05" diaginertia="2.0651e-05 2.02971e-05 3.29812e-06"/>  
+              <!-- <joint name="rh_dg_1_4" pos="0 0 0" axis="1 0 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->              
+              <joint name="rh_dg_1_4" pos="0 0 0" axis="1 0 0" range="-0.0708 1.5708" actuatorfrcrange="-7.5 7.5"/>
+              <geom type="mesh" mesh="rl_dg_1_4_c" rgba="0.231373 0.680392 0.705882 1"/>              
+              <geom pos="0 0.0363 0" quat="1 0 0 0" type="mesh" mesh="rl_dg_1_tip_c" rgba="1 1 1 1"/>
+              <body name="rl_dg_1_Tip" pos="0.0 0.052 0.006" />             
+              <body name="rl_dg_1_Tip_Face" pos="0.0 0.0425 0.0075" />              
+              <site name="rh_dg_1_4_touch" type="box" pos="0.0 0.03 0.0085" size="0.014 0.026 0.0155" rgba="0 1 0 0."/>
+            </body>          
+          </body>        
+        </body>      
+      </body>      
+      <body name="rl_dg_2_1" pos="-0.0071 0.027 0.1399">        
+        <inertial pos="0.001061 0.00024417 0.023499" quat="0.632598 0.317074 0.297256 0.641032" mass="0.045" diaginertia="9.53287e-06 8.0012e-06 5.63792e-06"/>        
+        <!-- <joint name="rh_dg_2_1" pos="0 0 0" axis="1 0 0" range="-0.418879 0.610865" actuatorfrcrange="-7.5 7.5"/> -->        
+        <joint name="rh_dg_2_1" pos="0 0 0" axis="1 0 0" range="-0.318879 0.310865" actuatorfrcrange="-7.5 7.5"/>
+        <geom type="mesh" mesh="rl_dg_2_1_c" rgba="0.615686 0.701765 0.729412 1"/>        
+        <body name="rl_dg_2_2" pos="0.01765 0 0.0265">          
+          <inertial pos="-4.7446e-06 2.3008e-05 0.023958" quat="0.998727 0.0504191 0.000239574 0.00141058" mass="0.045" diaginertia="6.4181e-06 6.01585e-06 2.42154e-06"/>     
+          <joint name="rh_dg_2_2" pos="0 0 0" axis="0 1 0" range="0 2.00713" actuatorfrcrange="-7.5 7.5"/>          
+          <geom type="mesh" mesh="rl_dg_2_2_c" rgba="0.615686 0.751765 0.729412 1"/>
+          <site name="rh_dg_2_2_touch" type="box" pos="0.009 0.0 0.023" size="0.017 0.014 0.028" rgba="0 1 0 0.0"/>
+    
+          <body name="rl_dg_2_3" pos="0 0 0.0388">            
+            <inertial pos="-4.7446e-06 2.3008e-05 0.023958" quat="0.998727 0.0504191 0.000239574 0.00141058" mass="0.045" diaginertia="6.4181e-06 6.01585e-06 2.42154e-06"/>            
+            <!-- <joint name="rh_dg_2_3" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->            
+            <joint name="rh_dg_2_3" pos="0 0 0" axis="0 1 0" range="-0.0708 1.5708" actuatorfrcrange="-7.5 7.5"/>            
+            <geom type="mesh" mesh="rl_dg_2_3_c" rgba="0.615686 0.791765 0.729412 1"/>
+            <site name="rh_dg_2_3_touch" type="box" pos="0.009 0.0 0.024" size="0.018 0.013 0.029" rgba="1 0 0 0."/>
+      
+            <body name="rl_dg_2_4" pos="0 0 0.0388">              
+              <inertial pos="4.4568e-05 -0.00389127 0.0160588" quat="0.526445 0.843914 -0.0138865 0.10233" mass="0.03" diaginertia="6.58495e-06 5.22897e-06 2.6024e-06"/>              
+              <!-- <joint name="rh_dg_2_4" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->              
+              <joint name="rh_dg_2_4" pos="0 0 0" axis="0 1 0" range="-0.0708 1.5708" actuatorfrcrange="-7.5 7.5"/>              
+              <geom type="mesh" mesh="rl_dg_2_4_c" rgba="0.615686 0.811765 0.729412 1"/>              
+              <geom pos="0 0 0.0255" quat="1 0 0 0" type="mesh" mesh="rl_dg_2_tip_c" rgba="1 1 1 1"/>
+              <site name="rh_dg_2_4_touch" type="box" pos="0.0095 0.0 0.03" size="0.0135 0.013 0.025" rgba="0 1 0 0."/>
+        
+              <body name="rl_dg_2_Tip" pos="0.005 0.0 0.042" />              
+              <body name="rl_dg_2_Tip_Face" pos="0.0075 0.0 0.0325" />            
+            </body>          
+          </body>        
+        </body>      
+      </body>      
+      <body name="rl_dg_3_1" pos="-0.0071 0.0025 0.1439">        
+        <inertial pos="0.0012558 -0.00017703 0.023374" quat="0.648691 0.313074 0.303523 0.623746" mass="0.045" diaginertia="9.33725e-06 7.69718e-06 5.31337e-06"/>       
+        <!-- <joint name="rh_dg_3_1" pos="0 0 0" axis="1 0 0" range="-0.610865 0.610865" actuatorfrcrange="-7.5 7.5"/> -->        
+        <joint name="rh_dg_3_1" pos="0 0 0" axis="1 0 0" range="-0.318879 0.310865" actuatorfrcrange="-7.5 7.5"/>        
+        <geom type="mesh" mesh="rl_dg_3_1_c" rgba="0.513726 0.737255 0.407843 1"/>        
+        <body name="rl_dg_3_2" pos="0.01765 0 0.0265">          
+          <inertial pos="-4.7446e-06 2.3008e-05 0.023958" quat="0.998727 0.0504191 0.000239574 0.00141058" mass="0.045" diaginertia="6.4181e-06 6.01585e-06 2.42154e-06"/>      
+          <joint name="rh_dg_3_2" pos="0 0 0" axis="0 1 0" range="0 1.95477" actuatorfrcrange="-7.5 7.5"/>          
+          <geom type="mesh" mesh="rl_dg_3_2_c" rgba="0.613726 0.737255 0.407843 1"/>                    
+          <site name="rh_dg_3_2_touch" type="box" pos="0.009 0.0 0.023" size="0.016 0.013 0.027" rgba="0 1 0 0."/>
+    
+          <body name="rl_dg_3_3" pos="0 0 0.0388">            
+            <inertial pos="-4.7446e-06 2.3008e-05 0.023958" quat="0.998727 0.0504191 0.000239574 0.00141058" mass="0.045" diaginertia="6.4181e-06 6.01585e-06 2.42154e-06"/>            
+            <!-- <joint name="rh_dg_3_3" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->            
+            <joint name="rh_dg_3_3" pos="0 0 0" axis="0 1 0" range="-0.0708 1.5708" actuatorfrcrange="-7.5 7.5"/>            
+            <geom type="mesh" mesh="rl_dg_3_3_c" rgba="0.713726 0.737255 0.407843 1"/>                        
+            <site name="rh_dg_3_3_touch" type="box" pos="0.009 0.0 0.024" size="0.015 0.013 0.027" rgba="1 0 0 0."/>
+      
+            <body name="rl_dg_3_4" pos="0 0 0.0388">              
+              <inertial pos="4.4568e-05 -0.00389127 0.0160588" quat="0.526445 0.843914 -0.0138865 0.10233" mass="0.03" diaginertia="6.58495e-06 5.22897e-06 2.6024e-06"/>              
+              <!-- <joint name="rh_dg_3_4" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->              
+              <joint name="rh_dg_3_4" pos="0 0 0" axis="0 1 0" range="-0.0708 1.5708" actuatorfrcrange="-7.5 7.5"/>              
+              <geom type="mesh" mesh="rl_dg_3_4_c" rgba="0.763726 0.737255 0.407843 1"/>              
+              <geom pos="0 0 0.0255" quat="1 0 0 0" type="mesh" mesh="rl_dg_3_tip_c" rgba="1 1 1 1"/>                        
+              <site name="rh_dg_3_4_touch" type="box" pos="0.0095 0.0 0.03" size="0.0145 0.013 0.029" rgba="0 1 0 0."/>
+        
+              <body name="rl_dg_3_Tip" pos="0.005 0.0 0.042" />              
+              <body name="rl_dg_3_Tip_Face" pos="0.0075 0.0 0.0325" />            
+            </body>          
+          </body>        
+        </body>      
+      </body>      
+      <body name="rl_dg_4_1" pos="-0.0071 -0.022 0.1359">        
+        <inertial pos="6.0566e-05 -0.00058566 0.023499" quat="0.666108 0.307837 0.308411 0.605327" mass="0.045" diaginertia="9.54523e-06 7.99297e-06 5.6344e-06"/>        
+        <!-- <joint name="rh_dg_4_1" pos="0 0 0" axis="1 0 0" range="-0.610865 0.418879" actuatorfrcrange="-7.5 7.5"/> -->        
+        <joint name="rh_dg_4_1" pos="0 0 0" axis="1 0 0" range="-0.318879 0.310865" actuatorfrcrange="-7.5 7.5"/>        
+        <geom type="mesh" mesh="rl_dg_4_1_c" rgba="0.972549 0.529412 0.00392157 1"/>        
+        <body name="rl_dg_4_2" pos="0.01765 0 0.0265">          
+          <inertial pos="-4.7446e-06 2.3008e-05 0.023958" quat="0.998727 0.0504191 0.000239574 0.00141058" mass="0.045" diaginertia="6.4181e-06 6.01585e-06 2.42154e-06"/>   
+          <joint name="rh_dg_4_2" pos="0 0 0" axis="0 1 0" range="0 1.90241" actuatorfrcrange="-7.5 7.5"/>          
+          <geom type="mesh" mesh="rl_dg_4_2_c" rgba="0.972549 0.729412 0.00392157 1"/>                    
+          <site name="rh_dg_4_2_touch" type="box" pos="0.009 0.0 0.022" size="0.017 0.013 0.028" rgba="0 1 0 0."/>
+    
+          <body name="rl_dg_4_3" pos="0 0 0.0388">            
+            <inertial pos="-4.7446e-06 2.3008e-05 0.023958" quat="0.998727 0.0504191 0.000239574 0.00141058" mass="0.045" diaginertia="6.4181e-06 6.01585e-06 2.42154e-06"/>            
+            <!-- <joint name="rh_dg_4_3" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->            
+            <joint name="rh_dg_4_3" pos="0 0 0" axis="0 1 0" range="-0.0174533 1.5708" actuatorfrcrange="-7.5 7.5"/>            
+            <geom type="mesh" mesh="rl_dg_4_3_c" rgba="0.972549 0.829412 0.00392157 1"/>                        
+            <site name="rh_dg_4_3_touch" type="box" pos="0.009 0.0 0.024" size="0.018 0.013 0.028" rgba="1 0 0 0."/>
+      
+            <body name="rl_dg_4_4" pos="0 0 0.0388">              
+              <inertial pos="4.4568e-05 -0.00389127 0.0160588" quat="0.526445 0.843914 -0.0138865 0.10233" mass="0.03" diaginertia="6.58495e-06 5.22897e-06 2.6024e-06"/> 
+              <!-- <joint name="rh_dg_4_4" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->              
+              <joint name="rh_dg_4_4" pos="0 0 0" axis="0 1 0" range="-0.0174533 1.5708" actuatorfrcrange="-7.5 7.5"/>              
+              <geom type="mesh" mesh="rl_dg_4_4_c" rgba="0.972549 0.889412 0.00392157 1"/>              
+              <geom pos="0 0 0.0255" quat="1 0 0 0" type="mesh" mesh="rl_dg_4_tip_c" rgba="1 1 1 1"/>
+              <site name="rh_dg_4_4_touch" type="box" pos="0.0095 0.0 0.03" size="0.0145 0.013 0.031" rgba="0 1 0 0."/>
+        
+              <body name="rl_dg_4_Tip" pos="0.005 0.0 0.042" />              
+              <body name="rl_dg_4_Tip_Face" pos="0.0075 0.0 0.0325" />            
+            </body>          
+          </body>        
+        </body>      
+      </body>      
+      <body name="rl_dg_5_1" pos="0.0103 -0.0195 0.092">        
+        <inertial pos="-0.00433014 -0.0250157 0.0140244" quat="0.856441 0.0940801 -0.138609 0.488309" mass="0.055" diaginertia="2.56498e-05 2.33809e-05 9.54179e-06"/>       
+        <!-- <joint name="rh_dg_5_1" pos="0 0 0" axis="0 0 1" range="-0.0174533 1.0472" actuatorfrcrange="-7.5 7.5"/> -->        
+        <joint name="rh_dg_5_1" pos="0 0 0" axis="0 0 1" range="-0.0174533 0.9472" actuatorfrcrange="-7.5 7.5"/>        
+        <geom type="mesh" mesh="rl_dg_5_1_c" rgba="0.7 0.74902 0.613725 1"/>                
+        <site name="rh_dg_5_1_touch" type="box" pos="0.009 -0.027 0.015" size="0.03 0.02 0.032" rgba="0 1 0 0."/>
+  
+        <body name="rl_dg_5_2" pos="0 -0.028 0.0381">          
+          <inertial pos="-0.000537631 0.000537631 0.0155001" quat="0.909406 -0.067474 0.162898 0.376687" mass="0.025" diaginertia="2.06912e-06 2.00204e-06 1.37635e-06"/>   
+          <!-- <joint name="rh_dg_5_2" pos="0 0 0" axis="1 0 0" range="-0.418879 0.610865" actuatorfrcrange="-7.5 7.5"/> -->          
+          <joint name="rh_dg_5_2" pos="0 0 0" axis="1 0 0" range="-0.0518879 0.410865" actuatorfrcrange="-7.5 7.5"/>
+          <geom type="mesh" mesh="rl_dg_5_2_c" rgba="0.7 0.74902 0.6313725 1"/>          
+          <body name="rl_dg_5_3" pos="0 0 0.031">            
+            <inertial pos="4.74465e-06 2.30084e-05 0.0148419" quat="0.998727 -0.05042 0.000239567 -0.00141066" mass="0.045" diaginertia="6.41806e-06 6.01584e-06 2.42155e-06"/>  
+            <!-- <joint name="rh_dg_5_3" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->            
+            <joint name="rh_dg_5_3" pos="0 0 0" axis="0 1 0" range="-0.0174533 1.5708" actuatorfrcrange="-7.5 7.5"/>            
+            <geom type="mesh" mesh="rl_dg_5_3_c" rgba="0.7 0.74902 0.663725 1"/>
+            <site name="rh_dg_5_3_touch" type="box" pos="0.009 0.0 0.0155" size="0.0165 0.014 0.023" rgba="1 0 0 0."/>
+      
+            <body name="rl_dg_5_4" pos="0 0 0.0388">              
+              <inertial pos="5.2052e-05 -0.00381428 0.0176289" quat="0.94731 -0.315963 -0.040746 0.0333238" mass="0.05" diaginertia="1.67134e-05 1.18894e-05 7.53281e-06"/>  
+              <!-- <joint name="rh_dg_5_4" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" actuatorfrcrange="-7.5 7.5"/> -->          
+              <joint name="rh_dg_5_4" pos="0 0 0" axis="0 1 0" range="-0.0174533 1.5708" actuatorfrcrange="-7.5 7.5"/>       
+              <geom type="mesh" mesh="rl_dg_5_4_c" rgba="0.7 0.74902 0.693725 1"/>            
+              <geom pos="0 0 0.0363" quat="1 0 0 0" type="mesh" mesh="rl_dg_5_tip_c" rgba="1 1 1 1"/>
+              <site name="rh_dg_5_4_touch" type="box" pos="0.0085 0.0 0.033" size="0.0145 0.013 0.042" rgba="0 1 0 0"/>
+        
+              <body name="rl_dg_5_Tip" pos="0.005 0.0 0.052" />              
+              <body name="rl_dg_5_Tip_Face" pos="0.0075 0.0 0.0425" />                          
+            </body>        
+          </body>     
+        </body>  
+      </body>   
+    </body>  
+  </worldbody>
+  
+  <actuator>    
+    <!-- Position -->    
+    <!-- thumb -->    
+    <position name="rh_dg_1_1" joint="rh_dg_1_1" kp="25" dampratio="1.0" ctrlrange="-0.383972 0.890118" />    
+    <position name="rh_dg_1_2" joint="rh_dg_1_2" kp="25" dampratio="1.0" ctrlrange="-2.54159 0" />    
+    <!-- <position name="rh_dg_1_2" joint="rh_dg_1_2" kp="12" ctrlrange="-3.14159 0" /> -->    
+    <position name="rh_dg_1_3" joint="rh_dg_1_3" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_1_3" joint="rh_dg_1_3" kp="8" ctrlrange="-1.5708 1.5708" /> -->    
+    <position name="rh_dg_1_4" joint="rh_dg_1_4" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_1_4" joint="rh_dg_1_4" kp="8" ctrlrange="-1.5708 1.5708" /> -->
+
+    <!-- index -->    
+    <position name="rh_dg_2_1" joint="rh_dg_2_1" kp="25" dampratio="1.0" ctrlrange="-0.318879 0.310865" />    
+    <!-- <position name="rh_dg_2_1" joint="rh_dg_2_1" kp="12" ctrlrange="-0.418879 0.610865" /> -->    
+    <position name="rh_dg_2_2" joint="rh_dg_2_2" kp="25" dampratio="1.0" ctrlrange="0 2.00713" />    
+    <position name="rh_dg_2_3" joint="rh_dg_2_3" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_2_3" joint="rh_dg_2_3" kp="8" ctrlrange="-1.5708 1.5708" /> -->    
+    <position name="rh_dg_2_4" joint="rh_dg_2_4" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />   
+    <!-- <position name="rh_dg_2_4" joint="rh_dg_2_4" kp="8" ctrlrange="-1.5708 1.5708" /> -->
+
+    <!-- middle -->    
+    <position name="rh_dg_3_1" joint="rh_dg_3_1" kp="25" dampratio="1.0" ctrlrange="-0.310865 0.318879" />    
+    <!-- <position name="rh_dg_3_1" joint="rh_dg_3_1" kp="12" ctrlrange="-0.610865 0.610865" /> -->    
+    <position name="rh_dg_3_2" joint="rh_dg_3_2" kp="25" dampratio="1.0" ctrlrange="0 1.95477" />    
+    <position name="rh_dg_3_3" joint="rh_dg_3_3" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />   
+    <!-- <position name="rh_dg_3_3" joint="rh_dg_3_3" kp="8" ctrlrange="-1.5708 1.5708" /> -->   
+    <position name="rh_dg_3_4" joint="rh_dg_3_4" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_3_4" joint="rh_dg_3_4" kp="8" ctrlrange="-1.5708 1.5708" /> -->
+
+    <!-- ring -->    
+    <position name="rh_dg_4_1" joint="rh_dg_4_1" kp="25" dampratio="1.0" ctrlrange="-0.310865 0.318879" />    
+    <!-- <position name="rh_dg_4_1" joint="rh_dg_4_1" kp="12" ctrlrange="-0.610865 0.418879" /> -->    
+    <position name="rh_dg_4_2" joint="rh_dg_4_2" kp="25" dampratio="1.0" ctrlrange="0 1.90241" />    
+    <position name="rh_dg_4_3" joint="rh_dg_4_3" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_4_3" joint="rh_dg_4_3" kp="8" ctrlrange="-1.5708 1.5708" /> -->    
+    <position name="rh_dg_4_4" joint="rh_dg_4_4" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_4_4" joint="rh_dg_4_4" kp="8" ctrlrange="-1.5708 1.5708" /> -->
+
+    <!-- little -->    
+    <position name="rh_dg_5_1" joint="rh_dg_5_1" kp="25" dampratio="1.0" ctrlrange="-0.0174533 0.2472" />    
+    <!-- <position name="rh_dg_5_1" joint="rh_dg_5_1" kp="12" ctrlrange="-0.0174533 1.0472" /> -->    
+    <position name="rh_dg_5_2" joint="rh_dg_5_2" kp="25" dampratio="1.0" ctrlrange="-0.0518879 0.410865" />    
+    <!-- <position name="rh_dg_5_2" joint="rh_dg_5_2" kp="12" ctrlrange="-0.418879 0.610865" /> -->    
+    <position name="rh_dg_5_3" joint="rh_dg_5_3" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_5_3" joint="rh_dg_5_3" kp="8" ctrlrange="-1.5708 1.5708" /> -->    
+    <position name="rh_dg_5_4" joint="rh_dg_5_4" kp="25" dampratio="1.0" ctrlrange="-0.0708 1.5708" />    
+    <!-- <position name="rh_dg_5_4" joint="rh_dg_5_4" kp="8" ctrlrange="-1.5708 1.5708" /> -->
+  </actuator>
+  
+  <equality>    
+    <!-- <weld body1="tesollo_rh:mocap" body2="tesollo_rh_palm" anchor="0 0 0" solimp="0.9 0.94 0.001" solref="0.04 1"></weld>   -->
+    <weld body1="tesollo_rh:mocap" body2="tesollo_rh_palm" anchor="0 0 0" solimp="0.9 0.95 0.001" solref="0.04 1"></weld>
+  </equality>
+  
+  <sensor>      
+    <touch name="tesollo_rh_dg_palm_body_touch" site="rh_dg_0_touch" />
+    <touch name="tesollo_r_arm_part_touch" site="tesollo_r_arm_part_touch" /> 
+    <touch name="tesollo_rh_dg_1_2_body_touch" site="rh_dg_1_2_touch" />    
+    <touch name="tesollo_rh_dg_1_3_body_touch" site="rh_dg_1_3_touch" />   
+    <touch name="tesollo_rh_dg_1_4_body_touch" site="rh_dg_1_4_touch" />
+    <touch name="tesollo_rh_dg_2_2_body_touch" site="rh_dg_2_2_touch" /> 
+    <touch name="tesollo_rh_dg_2_3_body_touch" site="rh_dg_2_3_touch" />    
+    <touch name="tesollo_rh_dg_2_4_body_touch" site="rh_dg_2_4_touch" />
+    <touch name="tesollo_rh_dg_3_2_body_touch" site="rh_dg_3_2_touch" /> 
+    <touch name="tesollo_rh_dg_3_3_body_touch" site="rh_dg_3_3_touch" />    
+    <touch name="tesollo_rh_dg_3_4_body_touch" site="rh_dg_3_4_touch" />
+    <touch name="tesollo_rh_dg_4_2_body_touch" site="rh_dg_4_2_touch" /> 
+    <touch name="tesollo_rh_dg_4_3_body_touch" site="rh_dg_4_3_touch" />    
+    <touch name="tesollo_rh_dg_4_4_body_touch" site="rh_dg_4_4_touch" />
+    <touch name="tesollo_rh_dg_5_1_body_touch" site="rh_dg_5_1_touch" /> 
+    <touch name="tesollo_rh_dg_5_3_body_touch" site="rh_dg_5_3_touch" />    
+    <touch name="tesollo_rh_dg_5_4_body_touch" site="rh_dg_5_4_touch" />  
+    <!-- <contact name="tesollo_r_arm_part_contact" site="tesollo_r_arm_part_touch" reduce="maxforce"        num="1"  data="found force pos normal"/>  -->
+    
+    <!-- Graspable object와 contact 센서 -->
+    <!-- <contact name="tesollo_rh_dg_palm_body_obj_contact" site="rh_dg_0_touch"   body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_1_2_body_obj_contact"  site="rh_dg_1_2_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_1_3_body_obj_contact"  site="rh_dg_1_3_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>   
+    <contact name="tesollo_rh_dg_1_4_body_obj_contact"  site="rh_dg_1_4_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_2_2_body_obj_contact"  site="rh_dg_2_2_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_2_3_body_obj_contact"  site="rh_dg_2_3_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_2_4_body_obj_contact"  site="rh_dg_2_4_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_3_2_body_obj_contact"  site="rh_dg_3_2_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_3_3_body_obj_contact"  site="rh_dg_3_3_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_3_4_body_obj_contact"  site="rh_dg_3_4_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_4_2_body_obj_contact"  site="rh_dg_4_2_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_4_3_body_obj_contact"  site="rh_dg_4_3_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_4_4_body_obj_contact"  site="rh_dg_4_4_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_5_1_body_obj_contact"  site="rh_dg_5_1_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_5_3_body_obj_contact"  site="rh_dg_5_3_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_5_4_body_obj_contact"  site="rh_dg_5_4_touch" body2="top_watertight_tiny_0" reduce="maxforce" num="1"  data="found force pos normal"/>   -->
+
+    <!-- Self-collision & table & Obstacle object와 contact 센서 -->
+    <contact name="tesollo_rh_dg_palm_self_coll" body1="tesollo_rh_palm"  subtree2="tesollo_rh_palm" reduce="maxforce"  num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_1_2_self_coll" body1="rl_dg_1_2" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_1_3_self_coll" body1="rl_dg_1_3" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>   
+    <contact name="tesollo_rh_dg_1_4_self_coll" body1="rl_dg_1_4" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_2_2_self_coll" body1="rl_dg_2_2" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_2_3_self_coll" body1="rl_dg_2_3" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_2_4_self_coll" body1="rl_dg_2_4" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_3_2_self_coll" body1="rl_dg_3_2" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_3_3_self_coll" body1="rl_dg_3_3" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_3_4_self_coll" body1="rl_dg_3_4" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_4_2_self_coll" body1="rl_dg_4_2" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_4_3_self_coll" body1="rl_dg_4_3" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_4_4_self_coll" body1="rl_dg_4_4" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>
+    <contact name="tesollo_rh_dg_5_1_self_coll" body1="rl_dg_5_1" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/> 
+    <contact name="tesollo_rh_dg_5_3_self_coll" body1="rl_dg_5_3" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>    
+    <contact name="tesollo_rh_dg_5_4_self_coll" body1="rl_dg_5_4" subtree2="tesollo_rh_palm" reduce="maxforce" num="1"  data="found force pos normal"/>  
+  </sensor>
+
+
+  <contact>    
+    <exclude body1="tesollo_rh_palm" body2="rl_dg_1_2"/>    
+    <exclude body1="tesollo_rh_palm" body2="rl_dg_1_1"/>   
+    <exclude body1="tesollo_rh_palm" body2="rl_dg_4_2"/>    
+    <exclude body1="tesollo_rh_palm" body2="rl_dg_4_3"/>
+  </contact>
+
+</mujoco>
+
